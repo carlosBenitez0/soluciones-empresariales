@@ -8,9 +8,12 @@ export const metadata: Metadata = {
   title: "Soluciones Empresariales | Servicios de Staffing & Talento Humano",
   description: "Agencia especializada en dotación de personal (Staff Augmentation) en El Salvador. Conectamos empresas en crecimiento con talento calificado.",
   icons: {
-    icon: "/logos/se-isotipo-no-bg.png",
-    shortcut: "/logos/se-isotipo-no-bg.png",
-    apple: "/logos/se-isotipo-no-bg.png",
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/logos/se-isotipo-no-bg.png', type: 'image/png' },
+    ],
+    shortcut: '/icon.png',
+    apple: '/icon.png',
   },
 };
 
