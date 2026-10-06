@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
-import { AdminHeader } from '@/components/admin/AdminHeader';
-import { Footer } from '@/components/layout/Footer';
 import { CandidateApplication, PipelineStage } from '@/types';
 import { Users, Search, ArrowLeft, CheckCircle2, Clock, FileCheck, Edit3, X, Calculator, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
@@ -78,21 +76,8 @@ export default function AdminCandidatosPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
-      <AdminHeader />
-
-      <main className="flex-1 py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          
-          {/* Breadcrumb Link */}
-          <div>
-            <Link href="/admin" className="inline-flex items-center gap-2 text-xs font-bold text-blue-700 hover:underline">
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Volver al Dashboard Principal</span>
-            </Link>
-          </div>
-
-          {/* Header Bar */}
+    <div className="space-y-6 pb-10">
+      {/* Header Bar */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-extrabold text-slate-900">Evaluaciones & Pipeline de Candidatos</h1>
@@ -303,8 +288,6 @@ export default function AdminCandidatosPage() {
           </div>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 }
