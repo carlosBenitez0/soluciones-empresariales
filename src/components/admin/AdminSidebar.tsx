@@ -74,43 +74,37 @@ export const AdminSidebar: React.FC = () => {
   const sidebarContent = (
     <div className="h-full flex flex-col justify-between bg-slate-900 text-slate-200 border-r border-slate-800">
       <div>
-        {/* Brand Header with Official Isotipo */}
-        <div className="p-6 border-b border-slate-800">
-          <Link href="/admin" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-white border border-slate-700/60 p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform shrink-0">
+        {/* Brand Header with Official Full Logo Image */}
+        <div className="p-5 border-b border-slate-800">
+          <Link href="/admin" className="block group">
+            <div className="bg-white/95 p-2.5 rounded-xl border border-white/20 shadow-md group-hover:scale-[1.02] transition-transform flex items-center justify-center">
               <Image
-                src="/logos/se-isotipo-no-bg.png"
+                src="/logos/se-logo-no-bg.png"
                 alt="Soluciones Empresariales"
-                width={36}
-                height={36}
-                className="w-full h-full object-contain"
+                width={190}
+                height={42}
+                className="h-8 w-auto object-contain"
+                priority
               />
             </div>
-            <div>
-              <span className="text-base font-extrabold text-white tracking-tight block leading-tight">
-                Soluciones<span className="text-blue-400">Empresariales</span>
-              </span>
-              <span className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase block mt-0.5">
-                Panel de Reclutamiento
-              </span>
-            </div>
+            <span className="text-[10px] font-extrabold tracking-wider text-slate-400 uppercase block mt-2 text-center">
+              PANEL DE RECLUTAMIENTO
+            </span>
           </Link>
 
-          {/* System Connection Badge */}
-          <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[11px] text-slate-300 font-medium">
-                {isSupabaseConfigured ? 'Supabase Cloud Conectado' : 'Sistema Operativo Activo'}
-              </span>
-            </div>
-            {isSupabaseConfigured && (
+          {/* Database Connection Badge - Only show when Supabase is live */}
+          {isSupabaseConfigured && (
+            <div className="mt-3 pt-2.5 border-t border-slate-800/60 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[11px] text-emerald-400 font-bold">Supabase Cloud</span>
+              </div>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                 <Database className="w-3 h-3 text-emerald-400" />
                 Live
               </span>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Navigation Menu */}
@@ -168,7 +162,7 @@ export const AdminSidebar: React.FC = () => {
 
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-white border border-slate-700 p-0.5 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-full bg-white border border-slate-700 p-0.5 flex items-center justify-center shrink-0 shadow-xs">
               <Image
                 src="/logos/se-isotipo-no-bg.png"
                 alt="Admin"
@@ -204,16 +198,15 @@ export const AdminSidebar: React.FC = () => {
       {/* Mobile Drawer Navigation Header */}
       <div className="lg:hidden bg-slate-900 text-white p-4 flex items-center justify-between border-b border-slate-800 sticky top-0 z-40">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center border border-slate-700">
+          <div className="bg-white/95 px-2 py-1 rounded-lg border border-white/20">
             <Image
-              src="/logos/se-isotipo-no-bg.png"
+              src="/logos/se-logo-no-bg.png"
               alt="Soluciones Empresariales"
-              width={26}
-              height={26}
-              className="w-full h-full object-contain"
+              width={140}
+              height={28}
+              className="h-6 w-auto object-contain"
             />
           </div>
-          <span className="font-bold text-sm text-white">Soluciones Empresariales</span>
         </div>
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
