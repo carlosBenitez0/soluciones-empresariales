@@ -76,8 +76,9 @@ export default function AdminCandidatosPage() {
   };
 
   return (
-    <div className="space-y-6 pb-10">
-      {/* Header Bar */}
+    <>
+      <div className="space-y-6 pb-10">
+        {/* Header Bar */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-extrabold text-slate-900">Evaluaciones & Pipeline de Candidatos</h1>
@@ -202,9 +203,7 @@ export default function AdminCandidatosPage() {
               ))
             )}
           </div>
-
         </div>
-      </main>
 
       {/* Evaluation Scores Modal */}
       {evaluatingCandidate && (
@@ -288,6 +287,6 @@ export default function AdminCandidatosPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

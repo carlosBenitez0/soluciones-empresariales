@@ -123,8 +123,9 @@ export default function AdminVacantesPage() {
   };
 
   return (
-    <div className="space-y-6 pb-10">
-      {/* Header Action Bar */}
+    <>
+      <div className="space-y-6 pb-10">
+        {/* Header Action Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
             <div>
               <h1 className="text-2xl font-extrabold text-slate-900">Gestión de Vacantes de Empleo</h1>
@@ -245,9 +246,7 @@ export default function AdminVacantesPage() {
               </table>
             </div>
           </div>
-
         </div>
-      </main>
 
       {/* Modal Creación / Edición de Vacante */}
       {isModalOpen && (
@@ -433,6 +432,6 @@ export default function AdminVacantesPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
