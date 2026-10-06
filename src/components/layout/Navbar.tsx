@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Building2, FileText, Menu, X, ShieldCheck, ChevronRight, Search } from 'lucide-react';
 
@@ -36,24 +37,21 @@ export const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             
-            {/* Logo & Brand Name */}
-            <Link href="/" className="flex items-center space-x-3 shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-emerald-600 p-0.5 flex items-center justify-center shadow-xs">
-                <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-blue-700" />
-                </div>
+            {/* Logo & Brand Name with Official Isotipo */}
+            <Link href="/" className="flex items-center space-x-2.5 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shadow-xs">
+                <Image
+                  src="/logos/se-isotipo-no-bg.png"
+                  alt="Soluciones Empresariales"
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-contain"
+                  priority
+                />
               </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-extrabold text-slate-900 tracking-tight">
-                    Soluciones Empresariales
-                  </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-bold uppercase tracking-wider">
-                    Staffing
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-500 font-medium">Prestación de Servicios de Talentos</p>
-              </div>
+              <span className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight whitespace-nowrap">
+                Soluciones Empresariales
+              </span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -79,17 +77,17 @@ export const Navbar: React.FC = () => {
             </nav>
 
             {/* Desktop Action Button */}
-            <div className="hidden lg:flex items-center space-x-3">
+            <div className="hidden xl:flex items-center space-x-3">
               <Link
                 href="/solicitar-personal"
-                className="px-4 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold shadow-md transition-all flex items-center gap-2"
+                className="px-4 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold shadow-md transition-all flex items-center gap-2"
               >
                 <Building2 className="w-4 h-4" />
                 <span>Solicitar Personal</span>
               </Link>
             </div>
 
-            {/* Mobile Menu Toggle Button */}
+            {/* Mobile / Tablet Menu Toggle Button */}
             <div className="xl:hidden flex items-center">
               <button
                 onClick={() => setMobileMenuOpen(true)}
@@ -121,8 +119,14 @@ export const Navbar: React.FC = () => {
               <div>
                 <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                   <div className="flex items-center space-x-2.5">
-                    <div className="w-9 h-9 rounded-lg bg-blue-700 flex items-center justify-center text-white shadow-xs">
-                      <Building2 className="w-5 h-5" />
+                    <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 p-0.5 flex items-center justify-center shadow-xs">
+                      <Image
+                        src="/logos/se-isotipo-no-bg.png"
+                        alt="Logo Isotipo"
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-contain"
+                      />
                     </div>
                     <div>
                       <span className="font-extrabold text-slate-900 text-base block leading-tight">

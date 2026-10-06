@@ -118,7 +118,7 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
               {/* Section 1: Tipo de Movimiento (PDF Page 11 Logic) */}
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
                 <label className="block text-xs font-bold text-blue-900 uppercase tracking-wider">
-                  Tipo de Solicitud de Personal (Flujograma RRHH)
+                  Tipo de Solicitud de Personal (Proceso de Staffing)
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label className={`p-4 rounded-xl border cursor-pointer flex items-center gap-3 transition-colors ${

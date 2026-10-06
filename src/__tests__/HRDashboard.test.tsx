@@ -28,7 +28,7 @@ describe('HRDashboard Component', () => {
     const salidaTab = screen.getByText('3. Salida e Indemnización');
     fireEvent.click(salidaTab);
 
-    expect(screen.getByText('Flujograma 3: Calculadora de Salida y Finiquito Legal')).toBeDefined();
+    expect(screen.getByText('Proceso 3: Calculadora de Salida y Finiquito Legal')).toBeDefined();
     expect(screen.getByText('Total Finiquito Estimado:')).toBeDefined();
   });
 });

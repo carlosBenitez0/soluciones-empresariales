@@ -124,7 +124,7 @@ export default function SeguimientoPage() {
                   {/* Visual 7-Step Pipeline Progress Tracker */}
                   <div>
                     <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4">
-                      Progreso del Flujograma de Reclutamiento (Paso a Paso)
+                      Progreso del Flujo de Reclutamiento y Selección (Paso a Paso)
                     </h4>
 
                     <div className="space-y-3">

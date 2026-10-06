@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Building2, MapPin, Phone, Mail, ShieldCheck } from 'lucide-react';
+import Image from 'next/image';
+import { MapPin, Phone, Mail, ShieldCheck } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
@@ -13,10 +14,14 @@ export const Footer: React.FC = () => {
           {/* Company identity & Slogan */}
           <div className="space-y-4 md:col-span-1">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-emerald-500 p-0.5 flex items-center justify-center">
-                <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-blue-400" />
-                </div>
+              <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-xs">
+                <Image
+                  src="/logos/se-isotipo-no-bg.png"
+                  alt="Soluciones Empresariales Logo"
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-lg font-bold text-white tracking-tight">Soluciones Empresariales</span>
             </div>
@@ -74,7 +79,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link href="/gestion-rrhh" className="hover:text-emerald-400 transition-colors">
-                  Panel de Flujogramas RRHH
+                  Centro Operativo RRHH
                 </Link>
               </li>
             </ul>

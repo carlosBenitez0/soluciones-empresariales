@@ -45,13 +45,13 @@ export const HRDashboard: React.FC<HRDashboardProps> = ({ applications, requests
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
-            Centro de Operaciones y Flujogramas RRHH
+            Centro Operativo de Talento Humano
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Panel de Gestión <span className="text-blue-700">Talento Humano</span>
           </h2>
           <p className="text-slate-600 mt-2 text-sm sm:text-base leading-relaxed">
-            Módulo basado estrictamente en los 4 flujogramas del manual de procesos de la empresa.
+            Módulo basado estrictamente en los 4 procesos del manual de operaciones de la empresa.
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export const HRDashboard: React.FC<HRDashboardProps> = ({ applications, requests
         {activeTab === 'ingreso' && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
-              <h3 className="text-xl font-extrabold text-slate-900 mb-2">Flujograma 1: Ingreso de Personal y Evaluaciones</h3>
+              <h3 className="text-xl font-extrabold text-slate-900 mb-2">Proceso 1: Ingreso de Personal y Evaluaciones</h3>
               <p className="text-slate-600 text-xs leading-relaxed mb-6 font-medium">
                 Proceso ordenado: Solicitud de cliente -&gt; Evaluación de Salario -&gt; Reclutamiento -&gt; Contacto -&gt; Entrevista -&gt; Pruebas Técnicas y Psicométricas -&gt; Entrevista con Cliente -&gt; Firma de Contrato.
               </p>
@@ -158,7 +158,7 @@ export const HRDashboard: React.FC<HRDashboardProps> = ({ applications, requests
         {/* Tab Content 2: Proceso de Planilla */}
         {activeTab === 'planilla' && (
           <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-6 shadow-xs">
-            <h3 className="text-xl font-extrabold text-slate-900 mb-2">Flujograma 2: Proceso de Planilla e Incidencias</h3>
+            <h3 className="text-xl font-extrabold text-slate-900 mb-2">Proceso 2: Emisión de Planilla e Incidencias</h3>
             <p className="text-slate-600 text-xs leading-relaxed mb-6 font-medium">
               Movimientos de personal (Ingresos / Egresos) -&gt; Reporte de incidencias -&gt; Finanzas realiza los pagos -&gt; Analista de Planilla Regional envía la planilla al cliente.
             </p>
@@ -196,10 +196,10 @@ export const HRDashboard: React.FC<HRDashboardProps> = ({ applications, requests
           <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-6 shadow-xs">
             <div className="flex items-center gap-2">
               <Calculator className="w-6 h-6 text-emerald-600" />
-              <h3 className="text-xl font-extrabold text-slate-900">Flujograma 3: Calculadora de Salida y Finiquito Legal</h3>
+              <h3 className="text-xl font-extrabold text-slate-900">Proceso 3: Calculadora de Salida y Finiquito Legal</h3>
             </div>
             <p className="text-slate-600 text-xs leading-relaxed font-medium">
-              Herramienta según el flujograma de salida: Revisión de vacaciones pendientes -&gt; Cálculo de indemnización -&gt; Finiquito Legal -&gt; Reserva de fondos en Finanzas.
+              Herramienta según el proceso de salida: Revisión de vacaciones pendientes -&gt; Cálculo de indemnización -&gt; Finiquito Legal -&gt; Reserva de fondos en Finanzas.
             </p>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -301,7 +301,7 @@ export const HRDashboard: React.FC<HRDashboardProps> = ({ applications, requests
         {/* Tab Content 4: Prestaciones */}
         {activeTab === 'prestaciones' && (
           <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-6 shadow-xs">
-            <h3 className="text-xl font-extrabold text-slate-900 mb-2">Flujograma 4: Prestaciones (Vacaciones, Aguinaldo, Seguro Médico)</h3>
+            <h3 className="text-xl font-extrabold text-slate-900 mb-2">Proceso 4: Prestaciones (Vacaciones, Aguinaldo, Seguro Médico)</h3>
             <p className="text-slate-600 text-xs leading-relaxed mb-6 font-medium">
               Reglas aplicadas según las especificaciones del cliente y normativas del manual.
             </p>

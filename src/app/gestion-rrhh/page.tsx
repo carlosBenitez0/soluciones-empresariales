@@ -33,13 +33,13 @@ export default function GestionRRHHPage() {
           <div className="bg-gradient-to-r from-blue-900 via-slate-900 to-emerald-900 text-white rounded-3xl p-8 lg:p-12 mb-10 shadow-xl">
             <div className="max-w-3xl space-y-4">
               <span className="px-3.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold uppercase tracking-wider">
-                Centro Procesal Interno & Flujogramas
+                Centro Procesal Interno & Operativo
               </span>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
                 Panel de Operaciones de Talento Humano
               </h1>
               <p className="text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
-                Gestión automatizada de los 4 flujogramas operativos de la empresa: Reclutamiento e Ingreso, Emisión de Planilla, Indemnizaciones/Finiquito y Control de Prestaciones de Ley.
+                Gestión automatizada de los 4 procesos operativos de la empresa: Reclutamiento e Ingreso, Emisión de Planilla, Indemnizaciones/Finiquito y Control de Prestaciones de Ley.
               </p>
             </div>
           </div>
