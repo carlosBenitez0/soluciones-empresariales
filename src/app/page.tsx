@@ -39,7 +39,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-blue-700 selection:text-white">
       
       {/* Executive Navbar */}
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -58,31 +58,31 @@ export default function Home() {
         )}
 
         {activeTab === 'staffing-vs-outsourcing' && (
-          <div className="pt-6">
+          <div className="pt-4">
             <StaffingVsOutsourcing setActiveTab={setActiveTab} />
           </div>
         )}
 
         {activeTab === 'vacantes' && (
-          <div className="pt-6">
+          <div className="pt-4">
             <VacancyList vacancies={vacancies} onAddApplication={handleAddApplication} />
           </div>
         )}
 
         {activeTab === 'competitividad' && (
-          <div className="pt-6">
+          <div className="pt-4">
             <CompetitorMatrix />
           </div>
         )}
 
         {activeTab === 'solicitud-empresa' && (
-          <div className="pt-6">
+          <div className="pt-4">
             <StaffingRequestForm onAddRequest={handleAddRequest} />
           </div>
         )}
 
         {activeTab === 'dashboard' && (
-          <div className="pt-6">
+          <div className="pt-4">
             <HRDashboard applications={applications} requests={requests} />
           </div>
         )}
