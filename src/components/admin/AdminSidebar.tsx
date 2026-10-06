@@ -74,25 +74,32 @@ export const AdminSidebar: React.FC = () => {
   const sidebarContent = (
     <div className="h-full flex flex-col justify-between bg-slate-900 text-slate-200 border-r border-slate-800">
       <div>
-        {/* Brand Header with Official Full Logo Image */}
+        {/* Brand Header with Isotipo & 2-Line Non-Overflow Typography */}
         <div className="p-5 border-b border-slate-800">
-          <Link href="/admin" className="block group">
-            <div className="bg-white/95 p-2.5 rounded-xl border border-white/20 shadow-md group-hover:scale-[1.02] transition-transform flex items-center justify-center">
+          <Link href="/admin" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-white border border-slate-700/60 p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform shrink-0">
               <Image
-                src="/logos/se-logo-no-bg.png"
+                src="/logos/se-isotipo-no-bg.png"
                 alt="Soluciones Empresariales"
-                width={190}
-                height={42}
-                className="h-8 w-auto object-contain"
-                priority
+                width={36}
+                height={36}
+                className="w-full h-full object-contain"
               />
             </div>
-            <span className="text-[10px] font-extrabold tracking-wider text-slate-400 uppercase block mt-2 text-center">
-              PANEL DE RECLUTAMIENTO
-            </span>
+            <div className="min-w-0 flex-1">
+              <span className="text-sm font-black text-white tracking-tight block leading-none">
+                Soluciones
+              </span>
+              <span className="text-sm font-black text-blue-400 tracking-tight block leading-tight mt-0.5">
+                Empresariales
+              </span>
+              <span className="text-[9px] font-bold tracking-widest text-slate-400 uppercase block mt-1">
+                Panel Reclutamiento
+              </span>
+            </div>
           </Link>
 
-          {/* Database Connection Badge - Only show when Supabase is live */}
+          {/* Database Connection Status (Only when live) */}
           {isSupabaseConfigured && (
             <div className="mt-3 pt-2.5 border-t border-slate-800/60 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -161,7 +168,7 @@ export const AdminSidebar: React.FC = () => {
         </Link>
 
         <div className="flex items-center justify-between pt-2">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-8 h-8 rounded-full bg-white border border-slate-700 p-0.5 flex items-center justify-center shrink-0 shadow-xs">
               <Image
                 src="/logos/se-isotipo-no-bg.png"
@@ -171,15 +178,15 @@ export const AdminSidebar: React.FC = () => {
                 className="w-full h-full object-contain"
               />
             </div>
-            <div>
-              <p className="text-xs font-bold text-white leading-tight">Admin Master</p>
-              <p className="text-[10px] text-slate-400 truncate max-w-[130px]">admin@soluciones.sv</p>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-white leading-tight truncate">Admin Master</p>
+              <p className="text-[10px] text-slate-400 truncate max-w-[110px]">admin@soluciones.sv</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
             title="Cerrar Sesión"
-            className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+            className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors shrink-0"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -197,20 +204,21 @@ export const AdminSidebar: React.FC = () => {
 
       {/* Mobile Drawer Navigation Header */}
       <div className="lg:hidden bg-slate-900 text-white p-4 flex items-center justify-between border-b border-slate-800 sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <div className="bg-white/95 px-2 py-1 rounded-lg border border-white/20">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center border border-slate-700 shrink-0">
             <Image
-              src="/logos/se-logo-no-bg.png"
+              src="/logos/se-isotipo-no-bg.png"
               alt="Soluciones Empresariales"
-              width={140}
-              height={28}
-              className="h-6 w-auto object-contain"
+              width={26}
+              height={26}
+              className="w-full h-full object-contain"
             />
           </div>
+          <span className="font-extrabold text-sm text-white truncate">Soluciones Empresariales</span>
         </div>
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white"
+          className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white shrink-0"
         >
           {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
