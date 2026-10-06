@@ -54,7 +54,7 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
   };
 
   return (
-    <section className="py-16 bg-slate-50 border-b border-slate-200">
+    <section className="py-12 lg:py-16 bg-slate-50 border-b border-slate-200">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -63,28 +63,28 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
             Atención Especializada para Empresas
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Solicitud de <span className="gradient-text">Staffing y Personal</span>
+            Solicitud de <span className="text-blue-700">Staffing y Personal</span>
           </h2>
-          <p className="text-slate-600 mt-2 text-base max-w-2xl mx-auto">
+          <p className="text-slate-600 mt-2 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
             Delegue su proceso de búsqueda y selección. Nos encargamos de la evaluación, reclutamiento y gestión de planillas con garantía de atención en 1 a 2 días.
           </p>
         </div>
 
         {/* Form Container */}
-        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-md">
+        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-md">
           {submitted ? (
             <div className="text-center py-10 space-y-4">
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto border border-emerald-300 shadow-xs">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
               <h3 className="text-2xl font-extrabold text-slate-900">¡Solicitud de Staffing Registrada!</h3>
-              <p className="text-slate-600 max-w-lg mx-auto">
+              <p className="text-slate-600 max-w-lg mx-auto text-sm leading-relaxed">
                 Hemos recibido la solicitud para la plaza <strong className="text-blue-700">{positionTitle}</strong> de <strong className="text-slate-900">{companyName}</strong>. Un especialista en Recursos Humanos asignado responderá en menos de <strong className="text-emerald-700">24 a 48 horas</strong>.
               </p>
               <div className="pt-4">
                 <button
                   onClick={handleReset}
-                  className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm shadow-md"
+                  className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm shadow-md transition-colors"
                 >
                   Registrar Otra Solicitud
                 </button>
@@ -95,12 +95,12 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
               
               {/* Section 1: Tipo de Movimiento (PDF Page 11 Logic) */}
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-                <label className="block text-xs font-bold text-blue-800 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-blue-900 uppercase tracking-wider">
                   Tipo de Solicitud de Personal (Flujograma RRHH)
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label className={`p-4 rounded-xl border cursor-pointer flex items-center gap-3 transition-colors ${
-                    requestType === 'Plaza Nueva' ? 'bg-blue-50 border-blue-600 text-slate-900' : 'bg-white border-slate-200 text-slate-600'
+                    requestType === 'Plaza Nueva' ? 'bg-blue-50 border-blue-600 text-blue-950' : 'bg-white border-slate-200 text-slate-700'
                   }`}>
                     <input
                       type="radio"
@@ -110,17 +110,17 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
                       onChange={() => setRequestType('Plaza Nueva')}
                       className="sr-only"
                     />
-                    <div className="w-4 h-4 rounded-full border border-blue-600 flex items-center justify-center">
+                    <div className="w-4 h-4 rounded-full border border-blue-600 flex items-center justify-center shrink-0">
                       {requestType === 'Plaza Nueva' && <div className="w-2 h-2 rounded-full bg-blue-700" />}
                     </div>
                     <div>
-                      <span className="font-bold block text-sm text-slate-900">Plaza Nueva</span>
-                      <span className="text-xs text-slate-500">Creación de puesto por expansión de la empresa</span>
+                      <span className="font-bold block text-sm text-blue-950">Plaza Nueva</span>
+                      <span className="text-xs text-slate-600">Creación de puesto por expansión de la empresa</span>
                     </div>
                   </label>
 
                   <label className={`p-4 rounded-xl border cursor-pointer flex items-center gap-3 transition-colors ${
-                    requestType === 'Reemplazo' ? 'bg-blue-50 border-blue-600 text-slate-900' : 'bg-white border-slate-200 text-slate-600'
+                    requestType === 'Reemplazo' ? 'bg-blue-50 border-blue-600 text-blue-950' : 'bg-white border-slate-200 text-slate-700'
                   }`}>
                     <input
                       type="radio"
@@ -130,12 +130,12 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
                       onChange={() => setRequestType('Reemplazo')}
                       className="sr-only"
                     />
-                    <div className="w-4 h-4 rounded-full border border-blue-600 flex items-center justify-center">
+                    <div className="w-4 h-4 rounded-full border border-blue-600 flex items-center justify-center shrink-0">
                       {requestType === 'Reemplazo' && <div className="w-2 h-2 rounded-full bg-blue-700" />}
                     </div>
                     <div>
-                      <span className="font-bold block text-sm text-slate-900">Reemplazo / Sustitución</span>
-                      <span className="text-xs text-slate-500">Sustitución por rotación o indemnización previa</span>
+                      <span className="font-bold block text-sm text-blue-950">Reemplazo / Sustitución</span>
+                      <span className="text-xs text-slate-600">Sustitución por rotación o indemnización previa</span>
                     </div>
                   </label>
                 </div>

@@ -23,7 +23,7 @@
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid #e2e8f0;
@@ -43,15 +43,13 @@
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 50%, #047857 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #1d4ed8;
+  font-weight: 800;
 }
 
 .gradient-text-gold {
-  background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #b45309;
+  font-weight: 800;
 }
 
 /* Custom Corporate Scrollbar */
