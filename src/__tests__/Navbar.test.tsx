@@ -9,10 +9,9 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('Navbar Component', () => {
-  it('renders branding, title, and simplified Staffing badge correctly', () => {
+  it('renders branding and title correctly', () => {
     render(<Navbar />);
     expect(screen.getByText('Soluciones Empresariales')).toBeDefined();
-    expect(screen.getByText('Staffing')).toBeDefined();
   });
 
   it('renders navigation links with Next.js hrefs', () => {

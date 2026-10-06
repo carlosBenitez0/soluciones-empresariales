@@ -46,7 +46,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onAddApplic
         </div>
 
         {/* Filters Bar */}
-        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-8 space-y-4 md:space-y-0 md:flex md:items-center md:gap-4 shadow-xs">
+        <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 mb-8 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4 shadow-sm">
           
           {/* Search Input */}
           <div className="relative flex-1">
@@ -56,36 +56,56 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onAddApplic
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar por puesto, requisito o ubicación..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 text-sm shadow-xs"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 text-sm shadow-xs font-medium"
             />
           </div>
 
-          {/* Category Dropdown */}
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-blue-600 shrink-0" />
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="py-2.5 px-3 rounded-xl bg-white border border-slate-300 text-slate-800 text-sm focus:outline-none focus:border-blue-600 shadow-xs font-medium"
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
+          {/* Dropdowns Grid Container for Mobile & Tablet */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:flex lg:items-center lg:w-auto">
+            
+            {/* Category Dropdown */}
+            <div className="relative flex items-center">
+              <Briefcase className="w-4 h-4 text-blue-600 absolute left-3.5 pointer-events-none z-10" />
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full lg:w-auto pl-10 pr-8 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-800 text-sm focus:outline-none focus:border-blue-600 shadow-xs font-semibold appearance-none cursor-pointer"
+              >
+                <option value="Todas">Todas las áreas</option>
+                {categories.filter(c => c !== 'Todas').map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 pointer-events-none text-slate-400 text-xs">▼</div>
+            </div>
+
+            {/* Work Mode Dropdown */}
+            <div className="relative flex items-center">
+              <MapPin className="w-4 h-4 text-emerald-600 absolute left-3.5 pointer-events-none z-10" />
+              <select
+                value={selectedWorkMode}
+                onChange={(e) => setSelectedWorkMode(e.target.value)}
+                className="w-full lg:w-auto pl-10 pr-8 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-800 text-sm focus:outline-none focus:border-blue-600 shadow-xs font-semibold appearance-none cursor-pointer"
+              >
+                <option value="Todos">Todas las modalidades</option>
+                {workModes.filter(m => m !== 'Todos').map((mode) => (
+                  <option key={mode} value={mode}>{mode}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 pointer-events-none text-slate-400 text-xs">▼</div>
+            </div>
+
           </div>
 
-          {/* Work Mode Dropdown */}
-          <div>
-            <select
-              value={selectedWorkMode}
-              onChange={(e) => setSelectedWorkMode(e.target.value)}
-              className="py-2.5 px-3 rounded-xl bg-white border border-slate-300 text-slate-800 text-sm focus:outline-none focus:border-blue-600 w-full shadow-xs font-medium"
+          {/* Active Filters Reset Button */}
+          {(searchTerm || selectedCategory !== 'Todas' || selectedWorkMode !== 'Todos') && (
+            <button
+              onClick={() => { setSearchTerm(''); setSelectedCategory('Todas'); setSelectedWorkMode('Todos'); }}
+              className="text-xs font-bold text-blue-700 hover:text-blue-900 bg-blue-50 border border-blue-200 px-3.5 py-2.5 rounded-xl whitespace-nowrap transition-colors flex items-center justify-center gap-1 w-full lg:w-auto"
             >
-              {workModes.map((mode) => (
-                <option key={mode} value={mode}>{mode}</option>
-              ))}
-            </select>
-          </div>
+              <span>Limpiar filtros</span>
+            </button>
+          )}
         </div>
 
         {/* Vacancies Grid */}
