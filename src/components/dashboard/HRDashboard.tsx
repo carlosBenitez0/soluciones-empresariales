@@ -39,7 +39,7 @@ export const HRDashboard: React.FC<HRDashboardProps> = ({ applications, requests
   const calculationResult = calculateSeverance();
 
   return (
-    <section className="py-16 bg-slate-50 border-b border-slate-200">
+    <section className="py-12 lg:py-16 bg-slate-50 border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -48,54 +48,67 @@ export const HRDashboard: React.FC<HRDashboardProps> = ({ applications, requests
             Centro de Operaciones y Flujogramas RRHH
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Panel de Gestión <span className="gradient-text">Talento Humano</span>
+            Panel de Gestión <span className="text-blue-700">Talento Humano</span>
           </h2>
-          <p className="text-slate-600 mt-2 text-base">
+          <p className="text-slate-600 mt-2 text-sm sm:text-base leading-relaxed">
             Módulo basado estrictamente en los 4 flujogramas del manual de procesos de la empresa.
           </p>
         </div>
 
-        {/* Dashboard Navigation Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-8 bg-white p-2 rounded-2xl border border-slate-200 max-w-4xl mx-auto shadow-xs">
-          <button
-            onClick={() => setActiveTab('ingreso')}
-            className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
-              activeTab === 'ingreso' ? 'bg-blue-700 text-white shadow-md' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Users className="w-4 h-4" />
-            <span>1. Ingreso de Personal</span>
-          </button>
+        {/* Outer Centered Container for Tabs */}
+        <div className="flex justify-center w-full mb-10">
+          {/* Inner Grid Container with Equal Column Widths & Perfect Alignment */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full max-w-4xl bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+            
+            <button
+              onClick={() => setActiveTab('ingreso')}
+              className={`w-full px-4 py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-start gap-3 border ${
+                activeTab === 'ingreso'
+                  ? 'bg-blue-700 text-white border-blue-700 shadow-md'
+                  : 'bg-white text-slate-700 border-transparent hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <Users className={`w-4 h-4 shrink-0 ${activeTab === 'ingreso' ? 'text-white' : 'text-blue-700'}`} />
+              <span className="truncate">1. Ingreso de Personal</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('planilla')}
-            className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
-              activeTab === 'planilla' ? 'bg-blue-700 text-white shadow-md' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <DollarSign className="w-4 h-4" />
-            <span>2. Proceso de Planilla</span>
-          </button>
+            <button
+              onClick={() => setActiveTab('planilla')}
+              className={`w-full px-4 py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-start gap-3 border ${
+                activeTab === 'planilla'
+                  ? 'bg-blue-700 text-white border-blue-700 shadow-md'
+                  : 'bg-white text-slate-700 border-transparent hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <DollarSign className={`w-4 h-4 shrink-0 ${activeTab === 'planilla' ? 'text-white' : 'text-blue-700'}`} />
+              <span className="truncate">2. Proceso de Planilla</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('salida')}
-            className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
-              activeTab === 'salida' ? 'bg-blue-700 text-white shadow-md' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <UserX className="w-4 h-4" />
-            <span>3. Salida e Indemnización</span>
-          </button>
+            <button
+              onClick={() => setActiveTab('salida')}
+              className={`w-full px-4 py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-start gap-3 border ${
+                activeTab === 'salida'
+                  ? 'bg-blue-700 text-white border-blue-700 shadow-md'
+                  : 'bg-white text-slate-700 border-transparent hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <UserX className={`w-4 h-4 shrink-0 ${activeTab === 'salida' ? 'text-white' : 'text-blue-700'}`} />
+              <span className="truncate">3. Salida e Indemnización</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('prestaciones')}
-            className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
-              activeTab === 'prestaciones' ? 'bg-blue-700 text-white shadow-md' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span>4. Prestaciones y Ley</span>
-          </button>
+            <button
+              onClick={() => setActiveTab('prestaciones')}
+              className={`w-full px-4 py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center justify-start gap-3 border ${
+                activeTab === 'prestaciones'
+                  ? 'bg-blue-700 text-white border-blue-700 shadow-md'
+                  : 'bg-white text-slate-700 border-transparent hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <ShieldCheck className={`w-4 h-4 shrink-0 ${activeTab === 'prestaciones' ? 'text-white' : 'text-blue-700'}`} />
+              <span className="truncate">4. Prestaciones y Ley</span>
+            </button>
+
+          </div>
         </div>
 
         {/* Tab Content 1: Ingreso de Personal */}

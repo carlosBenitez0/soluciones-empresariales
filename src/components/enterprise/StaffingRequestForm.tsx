@@ -281,14 +281,14 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
                 </div>
               </div>
 
-              {/* Submit Button */}
-              <div className="pt-4">
+              {/* Submit Button with Perfect Centering */}
+              <div className="pt-4 flex justify-center">
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold text-sm shadow-lg shadow-blue-700/20 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-4 px-6 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-blue-700/20 transition-all flex items-center justify-center gap-3 text-center"
                 >
-                  <Building2 className="w-5 h-5" />
-                  <span>Enviar Solicitud de Staffing a Soluciones Empresariales</span>
+                  <Building2 className="w-5 h-5 shrink-0" />
+                  <span className="text-center">Enviar Solicitud de Staffing a Soluciones Empresariales</span>
                 </button>
               </div>
 
