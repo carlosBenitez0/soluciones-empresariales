@@ -22,8 +22,51 @@ export const CompetitorMatrix: React.FC = () => {
           </p>
         </div>
 
-        {/* Comparison Table */}
-        <div className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-md">
+        {/* Mobile Card-Based View (Visible on Small Screens) */}
+        <div className="block md:hidden space-y-4">
+          {COMPETITOR_COMPARISON.map((row, idx) => (
+            <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+              {/* Attribute Header */}
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <h3 className="font-extrabold text-slate-900 text-sm">{row.attribute}</h3>
+              </div>
+
+              {/* Soluciones Empresariales Highlight Box */}
+              <div className="bg-gradient-to-r from-blue-50 via-emerald-50/50 to-blue-50 p-3.5 rounded-xl border border-blue-200/80">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-extrabold text-blue-900 uppercase tracking-wider">
+                    Soluciones Empresariales
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    Nuestra Ventaja
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 font-bold text-slate-900 text-sm mt-1">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span className="text-emerald-950 font-extrabold">{row.solucionesEmpresariales}</span>
+                </div>
+              </div>
+
+              {/* Competitors Comparison Grid */}
+              <div className="grid grid-cols-2 gap-2.5 text-xs pt-1">
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                  <span className="text-[10px] font-bold text-slate-500 block uppercase tracking-wider">Vínculos Estratégicos</span>
+                  <span className="font-bold text-slate-700 block">{row.vinculosEstrategicos}</span>
+                </div>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                  <span className="text-[10px] font-bold text-slate-500 block uppercase tracking-wider">Latin Top Jobs</span>
+                  <span className="font-bold text-slate-700 block">{row.latinTopJobs}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table View (Visible on Medium & Larger Screens) */}
+        <div className="hidden md:block bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-md">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
