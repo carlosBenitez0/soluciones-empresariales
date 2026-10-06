@@ -4,14 +4,12 @@ import React, { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { HRDashboard } from '@/components/dashboard/HRDashboard';
-import { INITIAL_CANDIDATE_APPLICATIONS, INITIAL_STAFFING_REQUESTS } from '@/data/mockData';
-import { CandidateApplication, StaffingRequest } from '@/types';
+import { useData } from '@/context/DataContext';
 import { ArrowLeft, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 export default function GestionRRHHPage() {
-  const [applications] = useState<CandidateApplication[]>(INITIAL_CANDIDATE_APPLICATIONS);
-  const [requests] = useState<StaffingRequest[]>(INITIAL_STAFFING_REQUESTS);
+  const { candidateApplications, staffingRequests } = useData();
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
@@ -44,7 +42,7 @@ export default function GestionRRHHPage() {
             </div>
           </div>
 
-          <HRDashboard applications={applications} requests={requests} />
+          <HRDashboard applications={candidateApplications} requests={staffingRequests} />
 
         </div>
       </main>

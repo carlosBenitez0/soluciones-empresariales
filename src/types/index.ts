@@ -32,12 +32,12 @@ export type PipelineStage =
 export interface CandidateApplication {
   id: string;
   trackingCode: string;
-  vacancyId: string;
+  vacancyId?: string;
   vacancyTitle: string;
   fullName: string;
   email: string;
   phone: string;
-  location: string;
+  location?: string;
   experienceYears: number;
   expectedSalary: number;
   resumeUrl?: string;
@@ -55,9 +55,12 @@ export interface CandidateApplication {
 export type StaffingRequestStatus = 
   | 'Pendiente (1-2 días)' 
   | 'En Evaluación de Salario' 
+  | 'En Revisión'
   | 'Búsqueda de Candidatos' 
   | 'Candidatos Presentados' 
-  | 'Completado';
+  | 'Completada'
+  | 'Completado'
+  | 'Cancelada';
 
 export interface StaffingRequest {
   id: string;

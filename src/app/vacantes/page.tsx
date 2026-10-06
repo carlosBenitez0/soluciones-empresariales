@@ -4,23 +4,16 @@ import React, { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { VacancyList } from '@/components/vacancies/VacancyList';
-import { INITIAL_VACANCIES } from '@/data/mockData';
-import { Vacancy, CandidateApplication } from '@/types';
+import { useData } from '@/context/DataContext';
+import { CandidateApplication } from '@/types';
 import { Briefcase, ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 
 export default function VacantesPage() {
-  const [vacancies, setVacancies] = useState<Vacancy[]>(INITIAL_VACANCIES);
-  const [applications, setApplications] = useState<CandidateApplication[]>([]);
+  const { vacancies, addCandidateApplication } = useData();
 
-  const handleAddApplication = (newApp: Omit<CandidateApplication, 'id' | 'appliedAt' | 'status'>) => {
-    const created: CandidateApplication = {
-      ...newApp,
-      id: `app-${Date.now()}`,
-      appliedAt: new Date().toISOString().split('T')[0],
-      status: 'Solicitud Recibida',
-    };
-    setApplications([created, ...applications]);
+  const handleAddApplication = async (newApp: Omit<CandidateApplication, 'id' | 'appliedAt' | 'status'>) => {
+    await addCandidateApplication(newApp);
   };
 
   return (

@@ -3,12 +3,13 @@
 import React, { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { INITIAL_CANDIDATE_APPLICATIONS, INITIAL_STAFFING_REQUESTS } from '@/data/mockData';
+import { useData } from '@/context/DataContext';
 import { CandidateApplication, StaffingRequest } from '@/types';
 import { Search, ArrowLeft, CheckCircle2, Clock, Building2, UserCheck, ShieldCheck, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SeguimientoPage() {
+  const { candidateApplications, staffingRequests } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchedCandidate, setSearchedCandidate] = useState<CandidateApplication | null>(null);
   const [searchedRequest, setSearchedRequest] = useState<StaffingRequest | null>(null);
@@ -30,11 +31,11 @@ export default function SeguimientoPage() {
 
     const query = searchQuery.trim().toLowerCase();
 
-    const candidateMatch = INITIAL_CANDIDATE_APPLICATIONS.find(
+    const candidateMatch = candidateApplications.find(
       (app) => app.trackingCode.toLowerCase() === query || app.email.toLowerCase() === query || app.fullName.toLowerCase().includes(query)
     );
 
-    const requestMatch = INITIAL_STAFFING_REQUESTS.find(
+    const requestMatch = staffingRequests.find(
       (req) => req.trackingCode.toLowerCase() === query || req.email.toLowerCase() === query || req.companyName.toLowerCase().includes(query)
     );
 

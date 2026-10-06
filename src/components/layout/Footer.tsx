@@ -82,6 +82,11 @@ export const Footer: React.FC = () => {
                   Centro Operativo RRHH
                 </Link>
               </li>
+              <li>
+                <Link href="/admin/login" className="hover:text-blue-400 transition-colors text-xs font-semibold pt-1 block text-slate-500">
+                  • Acceso Panel Admin
+                </Link>
+              </li>
             </ul>
           </div>
 

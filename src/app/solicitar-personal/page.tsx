@@ -4,22 +4,16 @@ import React, { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { StaffingRequestForm } from '@/components/enterprise/StaffingRequestForm';
-import { INITIAL_STAFFING_REQUESTS } from '@/data/mockData';
+import { useData } from '@/context/DataContext';
 import { StaffingRequest } from '@/types';
 import { Building2, Clock, ShieldCheck, Zap, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SolicitarPersonalPage() {
-  const [requests, setRequests] = useState<StaffingRequest[]>(INITIAL_STAFFING_REQUESTS);
+  const { staffingRequests, addStaffingRequest } = useData();
 
-  const handleAddRequest = (newReq: Omit<StaffingRequest, 'id' | 'submittedAt' | 'status'>) => {
-    const created: StaffingRequest = {
-      ...newReq,
-      id: `req-${Date.now()}`,
-      submittedAt: new Date().toISOString().split('T')[0],
-      status: 'Pendiente (1-2 días)',
-    };
-    setRequests([created, ...requests]);
+  const handleAddRequest = async (newReq: Omit<StaffingRequest, 'id' | 'submittedAt' | 'status'>) => {
+    await addStaffingRequest(newReq);
   };
 
   return (
@@ -80,7 +74,7 @@ export default function SolicitarPersonalPage() {
               Solicitudes Recientes en Gestión
             </h3>
             <div className="divide-y divide-slate-100">
-              {requests.map((req) => (
+              {staffingRequests.map((req) => (
                 <div key={req.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2">
