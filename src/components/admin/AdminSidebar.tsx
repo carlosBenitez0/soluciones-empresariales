@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
@@ -14,14 +15,10 @@ import {
   FileSpreadsheet,
   LogOut,
   ExternalLink,
-  ShieldCheck,
   Database,
   Menu,
   X,
   ChevronRight,
-  TrendingUp,
-  Award,
-  Sparkles
 } from 'lucide-react';
 
 export const AdminSidebar: React.FC = () => {
@@ -67,22 +64,27 @@ export const AdminSidebar: React.FC = () => {
       badgeColor: 'bg-blue-500 text-white font-bold',
     },
     {
-      label: 'Reportes & Exportar PDF',
+      label: 'Reportes',
       href: '/admin/reportes',
       icon: FileSpreadsheet,
-      badge: 'PRO',
-      badgeColor: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
+      badge: null,
     },
   ];
 
   const sidebarContent = (
     <div className="h-full flex flex-col justify-between bg-slate-900 text-slate-200 border-r border-slate-800">
       <div>
-        {/* Brand Header */}
+        {/* Brand Header with Official Isotipo */}
         <div className="p-6 border-b border-slate-800">
           <Link href="/admin" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
-              <ShieldCheck className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-white border border-slate-700/60 p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform shrink-0">
+              <Image
+                src="/logos/se-isotipo-no-bg.png"
+                alt="Soluciones Empresariales"
+                width={36}
+                height={36}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <span className="text-base font-extrabold text-white tracking-tight block leading-tight">
@@ -94,12 +96,12 @@ export const AdminSidebar: React.FC = () => {
             </div>
           </Link>
 
-          {/* Database Connection Badge */}
+          {/* System Connection Badge */}
           <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${isSupabaseConfigured ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
-              <span className="text-[11px] text-slate-400 font-medium">
-                {isSupabaseConfigured ? 'Supabase Cloud' : 'Modo Demo / Local'}
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[11px] text-slate-300 font-medium">
+                {isSupabaseConfigured ? 'Supabase Cloud Conectado' : 'Sistema Operativo Activo'}
               </span>
             </div>
             {isSupabaseConfigured && (
@@ -166,8 +168,14 @@ export const AdminSidebar: React.FC = () => {
 
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-inner">
-              SE
+            <div className="w-8 h-8 rounded-full bg-white border border-slate-700 p-0.5 flex items-center justify-center shrink-0">
+              <Image
+                src="/logos/se-isotipo-no-bg.png"
+                alt="Admin"
+                width={24}
+                height={24}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <p className="text-xs font-bold text-white leading-tight">Admin Master</p>
@@ -196,8 +204,14 @@ export const AdminSidebar: React.FC = () => {
       {/* Mobile Drawer Navigation Header */}
       <div className="lg:hidden bg-slate-900 text-white p-4 flex items-center justify-between border-b border-slate-800 sticky top-0 z-40">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold">
-            <ShieldCheck className="w-5 h-5" />
+          <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center border border-slate-700">
+            <Image
+              src="/logos/se-isotipo-no-bg.png"
+              alt="Soluciones Empresariales"
+              width={26}
+              height={26}
+              className="w-full h-full object-contain"
+            />
           </div>
           <span className="font-bold text-sm text-white">Soluciones Empresariales</span>
         </div>
