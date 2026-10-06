@@ -1,10 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { COMPETITOR_COMPARISON } from '../../data/mockData';
 import { Zap, ShieldCheck, CheckCircle2, Clock } from 'lucide-react';
 
 export const CompetitorMatrix: React.FC = () => {
+  const [activeMobileTab, setActiveMobileTab] = useState<'vinculos' | 'latin'>('vinculos');
+
   return (
     <section className="py-16 bg-slate-50 border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,47 +24,80 @@ export const CompetitorMatrix: React.FC = () => {
           </p>
         </div>
 
-        {/* Mobile Card-Based View (Visible on Small Screens) */}
-        <div className="block md:hidden space-y-4">
-          {COMPETITOR_COMPARISON.map((row, idx) => (
-            <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-              {/* Attribute Header */}
-              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-                  <Clock className="w-4 h-4" />
-                </div>
-                <h3 className="font-extrabold text-slate-900 text-sm">{row.attribute}</h3>
-              </div>
+        {/* Mobile Tabbed Switcher View (Visible on Small Screens) */}
+        <div className="block md:hidden mb-8">
+          
+          {/* Tab Selector Buttons */}
+          <div className="bg-slate-200/80 p-1.5 rounded-2xl flex gap-1 mb-4 shadow-inner">
+            <button
+              onClick={() => setActiveMobileTab('vinculos')}
+              className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition-all text-center ${
+                activeMobileTab === 'vinculos'
+                  ? 'bg-blue-700 text-white shadow-md'
+                  : 'text-slate-700 hover:text-slate-900'
+              }`}
+            >
+              vs. Vínculos Estratégicos
+            </button>
 
-              {/* Soluciones Empresariales Highlight Box */}
-              <div className="bg-gradient-to-r from-blue-50 via-emerald-50/50 to-blue-50 p-3.5 rounded-xl border border-blue-200/80">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-extrabold text-blue-900 uppercase tracking-wider">
-                    Soluciones Empresariales
-                  </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
-                    Nuestra Ventaja
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 font-bold text-slate-900 text-sm mt-1">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span className="text-emerald-950 font-extrabold">{row.solucionesEmpresariales}</span>
-                </div>
-              </div>
+            <button
+              onClick={() => setActiveMobileTab('latin')}
+              className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition-all text-center ${
+                activeMobileTab === 'latin'
+                  ? 'bg-blue-700 text-white shadow-md'
+                  : 'text-slate-700 hover:text-slate-900'
+              }`}
+            >
+              vs. Latin Top Jobs
+            </button>
+          </div>
 
-              {/* Competitors Comparison Grid */}
-              <div className="grid grid-cols-2 gap-2.5 text-xs pt-1">
-                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
-                  <span className="text-[10px] font-bold text-slate-500 block uppercase tracking-wider">Vínculos Estratégicos</span>
-                  <span className="font-bold text-slate-700 block">{row.vinculosEstrategicos}</span>
-                </div>
-                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
-                  <span className="text-[10px] font-bold text-slate-500 block uppercase tracking-wider">Latin Top Jobs</span>
-                  <span className="font-bold text-slate-700 block">{row.latinTopJobs}</span>
-                </div>
-              </div>
+          {/* Compact Comparison Card Container */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div className="bg-slate-100 px-4 py-3 border-b border-slate-200 flex justify-between items-center text-xs font-extrabold text-slate-700">
+              <span>CRITERIO EVALUADO</span>
+              <span>COMPARATIVA DIRECTA</span>
             </div>
-          ))}
+
+            <div className="divide-y divide-slate-100">
+              {COMPETITOR_COMPARISON.map((row, idx) => {
+                const competitorValue = activeMobileTab === 'vinculos' ? row.vinculosEstrategicos : row.latinTopJobs;
+                const competitorName = activeMobileTab === 'vinculos' ? 'Vínculos Estratégicos' : 'Latin Top Jobs';
+
+                return (
+                  <div key={idx} className="p-4 space-y-2.5 hover:bg-slate-50/50 transition-colors">
+                    <span className="font-extrabold text-slate-900 text-xs flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                      {row.attribute}
+                    </span>
+
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      {/* Soluciones Empresariales Highlight */}
+                      <div className="bg-emerald-50/90 border border-emerald-200 p-2.5 rounded-xl space-y-1">
+                        <span className="text-[9px] font-black text-emerald-800 uppercase tracking-wider block">
+                          Soluciones Emp.
+                        </span>
+                        <span className="font-extrabold text-emerald-950 text-xs block leading-tight flex items-start gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                          <span>{row.solucionesEmpresariales}</span>
+                        </span>
+                      </div>
+
+                      {/* Selected Competitor */}
+                      <div className="bg-slate-50 border border-slate-200 p-2.5 rounded-xl space-y-1">
+                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block truncate">
+                          {competitorName}
+                        </span>
+                        <span className="font-semibold text-slate-700 text-xs block leading-tight">
+                          {competitorValue}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {/* Desktop Table View (Visible on Medium & Larger Screens) */}
