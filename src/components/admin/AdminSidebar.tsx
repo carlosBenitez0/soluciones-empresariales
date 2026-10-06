@@ -74,35 +74,32 @@ export const AdminSidebar: React.FC = () => {
   const sidebarContent = (
     <div className="h-full flex flex-col justify-between bg-slate-900 text-slate-200 border-r border-slate-800">
       <div>
-        {/* Brand Header with Isotipo & 2-Line Non-Overflow Typography */}
-        <div className="p-5 border-b border-slate-800">
-          <Link href="/admin" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-white border border-slate-700/60 p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform shrink-0">
+        {/* Brand Header: Original clean layout, adjusted padding & font size to prevent overflow */}
+        <div className="p-4 border-b border-slate-800">
+          <Link href="/admin" className="flex items-center gap-2.5 group min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0 p-1">
               <Image
                 src="/logos/se-isotipo-no-bg.png"
                 alt="Soluciones Empresariales"
-                width={36}
-                height={36}
-                className="w-full h-full object-contain"
+                width={32}
+                height={32}
+                className="w-full h-full object-contain brightness-0 invert"
               />
             </div>
             <div className="min-w-0 flex-1">
-              <span className="text-sm font-black text-white tracking-tight block leading-none">
-                Soluciones
+              <span className="text-[13px] font-black text-white tracking-tight block leading-tight whitespace-nowrap">
+                Soluciones<span className="text-blue-400">Empresariales</span>
               </span>
-              <span className="text-sm font-black text-blue-400 tracking-tight block leading-tight mt-0.5">
-                Empresariales
-              </span>
-              <span className="text-[9px] font-bold tracking-widest text-slate-400 uppercase block mt-1">
-                Panel Reclutamiento
+              <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase block mt-0.5 whitespace-nowrap">
+                Panel de Reclutamiento
               </span>
             </div>
           </Link>
 
           {/* Database Connection Status (Only when live) */}
           {isSupabaseConfigured && (
-            <div className="mt-3 pt-2.5 border-t border-slate-800/60 flex items-center justify-between">
-              <div className="flex items-center gap-2">
+            <div className="mt-3 pt-2 border-t border-slate-800/60 flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-[11px] text-emerald-400 font-bold">Supabase Cloud</span>
               </div>
@@ -115,7 +112,7 @@ export const AdminSidebar: React.FC = () => {
         </div>
 
         {/* Navigation Menu */}
-        <div className="px-3 py-6 space-y-1.5">
+        <div className="px-3 py-5 space-y-1">
           <div className="px-3 pb-2 text-[10px] font-bold tracking-widest text-slate-500 uppercase">
             Módulos Principales
           </div>
@@ -128,7 +125,7 @@ export const AdminSidebar: React.FC = () => {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMobileOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
                   isActive
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800/70'
@@ -169,14 +166,8 @@ export const AdminSidebar: React.FC = () => {
 
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-white border border-slate-700 p-0.5 flex items-center justify-center shrink-0 shadow-xs">
-              <Image
-                src="/logos/se-isotipo-no-bg.png"
-                alt="Admin"
-                width={24}
-                height={24}
-                className="w-full h-full object-contain"
-              />
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-inner shrink-0">
+              SE
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold text-white leading-tight truncate">Admin Master</p>
@@ -205,13 +196,13 @@ export const AdminSidebar: React.FC = () => {
       {/* Mobile Drawer Navigation Header */}
       <div className="lg:hidden bg-slate-900 text-white p-4 flex items-center justify-between border-b border-slate-800 sticky top-0 z-40">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-white p-0.5 flex items-center justify-center border border-slate-700 shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shrink-0">
             <Image
               src="/logos/se-isotipo-no-bg.png"
               alt="Soluciones Empresariales"
-              width={26}
-              height={26}
-              className="w-full h-full object-contain"
+              width={24}
+              height={24}
+              className="w-full h-full object-contain brightness-0 invert"
             />
           </div>
           <span className="font-extrabold text-sm text-white truncate">Soluciones Empresariales</span>
