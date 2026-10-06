@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Vacancy, CandidateApplication } from '../../types';
-import { X, Briefcase, MapPin, DollarSign, CheckCircle2, Upload, Send } from 'lucide-react';
+import { X, Briefcase, MapPin, DollarSign, CheckCircle2, Upload, Send, ArrowRight } from 'lucide-react';
 
 interface VacancyModalProps {
   vacancy: Vacancy | null;
@@ -20,6 +21,7 @@ export const VacancyModal: React.FC<VacancyModalProps> = ({ vacancy, onClose, on
   const [coverLetter, setCoverLetter] = useState('');
   const [fileName, setFileName] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [generatedCode, setGeneratedCode] = useState('');
 
   if (!vacancy) return null;
 
@@ -33,7 +35,11 @@ export const VacancyModal: React.FC<VacancyModalProps> = ({ vacancy, onClose, on
     e.preventDefault();
     if (!fullName || !email || !phone) return;
 
+    const trackingCode = `APP-${Math.floor(1000 + Math.random() * 9000)}`;
+    setGeneratedCode(trackingCode);
+
     onSubmitApplication({
+      trackingCode,
       vacancyId: vacancy.id,
       vacancyTitle: vacancy.title,
       fullName,
@@ -73,18 +79,35 @@ export const VacancyModal: React.FC<VacancyModalProps> = ({ vacancy, onClose, on
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-6 flex-1 text-slate-700 text-sm">
           {submitted ? (
-            <div className="text-center py-10 space-y-4">
+            <div className="text-center py-8 space-y-4">
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto border border-emerald-300 shadow-sm">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
               <h4 className="text-2xl font-extrabold text-slate-900">¡Postulación Enviada con Éxito!</h4>
-              <p className="text-slate-600 max-w-md mx-auto">
+              
+              <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 max-w-md mx-auto text-center space-y-1">
+                <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Tu Código de Rastreo Guardado</span>
+                <span className="text-2xl font-black text-blue-700 block tracking-widest">{generatedCode}</span>
+                <p className="text-xs text-slate-600">Guarda este código para consultar el avance de tu reclutamiento.</p>
+              </div>
+
+              <p className="text-slate-600 max-w-md mx-auto text-xs leading-relaxed">
                 Hemos recibido tus datos para la vacante <strong className="text-blue-700">{vacancy.title}</strong>. Nuestro equipo de Talento Humano se pondrá en contacto contigo en un plazo estimado de <strong className="text-emerald-700">1 a 2 días hábiles</strong>.
               </p>
-              <div className="pt-4">
+
+              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link
+                  href="/seguimiento"
+                  onClick={onClose}
+                  className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                >
+                  <span>Ir al Portal de Seguimiento</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
                 <button
                   onClick={onClose}
-                  className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold shadow-md"
+                  className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs"
                 >
                   Cerrar Ventana
                 </button>

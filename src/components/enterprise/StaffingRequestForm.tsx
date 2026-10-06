@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { StaffingRequest, RequestType, JobCategory } from '../../types';
-import { Building2, CheckCircle2 } from 'lucide-react';
+import { Building2, CheckCircle2, ArrowRight } from 'lucide-react';
 
 interface StaffingRequestFormProps {
   onAddRequest: (request: Omit<StaffingRequest, 'id' | 'submittedAt' | 'status'>) => void;
@@ -21,12 +22,17 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
   const [keyRequirements, setKeyRequirements] = useState('');
   const [urgent, setUrgent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [generatedCode, setGeneratedCode] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!companyName || !contactName || !email || !phone || !positionTitle) return;
 
+    const trackingCode = `REQ-${Math.floor(1000 + Math.random() * 9000)}`;
+    setGeneratedCode(trackingCode);
+
     onAddRequest({
+      trackingCode,
       companyName,
       contactName,
       email,
@@ -73,18 +79,34 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
         {/* Form Container */}
         <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-md">
           {submitted ? (
-            <div className="text-center py-10 space-y-4">
+            <div className="text-center py-8 space-y-4">
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto border border-emerald-300 shadow-xs">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
               <h3 className="text-2xl font-extrabold text-slate-900">¡Solicitud de Staffing Registrada!</h3>
+              
+              <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 max-w-md mx-auto text-center space-y-1">
+                <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Código de Rastreo de Solicitud</span>
+                <span className="text-2xl font-black text-blue-700 block tracking-widest">{generatedCode}</span>
+                <p className="text-xs text-slate-600">Guarde este código para dar seguimiento a la búsqueda de su personal.</p>
+              </div>
+
               <p className="text-slate-600 max-w-lg mx-auto text-sm leading-relaxed">
                 Hemos recibido la solicitud para la plaza <strong className="text-blue-700">{positionTitle}</strong> de <strong className="text-slate-900">{companyName}</strong>. Un especialista en Recursos Humanos asignado responderá en menos de <strong className="text-emerald-700">24 a 48 horas</strong>.
               </p>
-              <div className="pt-4">
+
+              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link
+                  href="/seguimiento"
+                  className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md flex items-center gap-2"
+                >
+                  <span>Ir al Portal de Consulta de Estado</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
                 <button
                   onClick={handleReset}
-                  className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm shadow-md transition-colors"
+                  className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs"
                 >
                   Registrar Otra Solicitud
                 </button>

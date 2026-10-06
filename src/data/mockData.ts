@@ -120,6 +120,7 @@ export const COMPETITOR_COMPARISON: CompetitorComparison[] = [
 export const INITIAL_STAFFING_REQUESTS: StaffingRequest[] = [
   {
     id: 'req-101',
+    trackingCode: 'REQ-8810',
     companyName: 'Comercializadora El Norte S.A.',
     contactName: 'Carlos Rivera',
     email: 'crivera@elnorte.sv',
@@ -139,6 +140,7 @@ export const INITIAL_STAFFING_REQUESTS: StaffingRequest[] = [
 export const INITIAL_CANDIDATE_APPLICATIONS: CandidateApplication[] = [
   {
     id: 'app-501',
+    trackingCode: 'APP-5011',
     vacancyId: 'vac-1',
     vacancyTitle: 'Analista Contable y de Planillas',
     fullName: 'María Elena Guardado',

@@ -20,8 +20,18 @@ export interface Vacancy {
   isUrgent?: boolean;
 }
 
+export type PipelineStage = 
+  | 'Solicitud Recibida'
+  | 'Contacto Telefónico'
+  | 'Entrevista Inicial'
+  | 'Pruebas Técnicas y Psicométricas'
+  | 'Entrevista con Cliente'
+  | 'Expediente Aprobado'
+  | 'Contratación y Firma';
+
 export interface CandidateApplication {
   id: string;
+  trackingCode: string;
   vacancyId: string;
   vacancyTitle: string;
   fullName: string;
@@ -42,17 +52,16 @@ export interface CandidateApplication {
   };
 }
 
-export type PipelineStage = 
-  | 'Solicitud Recibida'
-  | 'Contacto Telefónico'
-  | 'Entrevista Inicial'
-  | 'Pruebas Técnicas y Psicométricas'
-  | 'Entrevista con Cliente'
-  | 'Expediente Aprobado'
-  | 'Contratación y Firma';
+export type StaffingRequestStatus = 
+  | 'Pendiente (1-2 días)' 
+  | 'En Evaluación de Salario' 
+  | 'Búsqueda de Candidatos' 
+  | 'Candidatos Presentados' 
+  | 'Completado';
 
 export interface StaffingRequest {
   id: string;
+  trackingCode: string;
   companyName: string;
   contactName: string;
   email: string;
@@ -65,7 +74,7 @@ export interface StaffingRequest {
   keyRequirements: string;
   urgent: boolean;
   submittedAt: string;
-  status: 'Pendiente (1-2 días)' | 'En Evaluación' | 'Candidatos Presentados' | 'Completado';
+  status: StaffingRequestStatus;
 }
 
 export interface CompetitorComparison {
