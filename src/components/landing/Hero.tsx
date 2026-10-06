@@ -1,13 +1,10 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Building2, Users, Clock, ShieldCheck, ArrowRight, Zap } from 'lucide-react';
 
-interface HeroProps {
-  setActiveTab?: (tab: string) => void;
-}
-
-export const Hero: React.FC<HeroProps> = ({ setActiveTab }) => {
+export const Hero: React.FC = () => {
   return (
     <div className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-50 py-16 lg:py-24 border-b border-slate-200">
       
@@ -21,12 +18,12 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab }) => {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-xs sm:text-sm font-bold tracking-wide shadow-xs">
             <Zap className="w-4 h-4 text-blue-600 animate-pulse" />
-            <span>Staffing de Talento Humano en El Salvador & Chalatenango</span>
+            <span>Staffing de Talento Humano</span>
           </div>
 
-          {/* Main Title */}
+          {/* Main Title (Improved Phrasing: Removed 'El Intermediario') */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            El Intermediario Estratégico Entre <span className="gradient-text">Empresas en Crecimiento</span> y <span className="gradient-text-gold">Talento Calificado</span>
+            Conexión Estratégica Entre <span className="gradient-text">Empresas en Crecimiento</span> y <span className="gradient-text-gold">Talento Calificado</span>
           </h1>
 
           {/* Subtitle */}
@@ -36,22 +33,22 @@ export const Hero: React.FC<HeroProps> = ({ setActiveTab }) => {
 
           {/* Dual Action CTA Buttons */}
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => setActiveTab?.('solicitud-empresa')}
+            <Link
+              href="/solicitar-personal"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold text-base shadow-lg shadow-blue-700/20 transition-all flex items-center justify-center gap-2 group"
             >
               <Building2 className="w-5 h-5" />
               <span>Soy Empresa: Solicitar Personal</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
 
-            <button
-              onClick={() => setActiveTab?.('vacantes')}
+            <Link
+              href="/vacantes"
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-900 font-extrabold text-base transition-all flex items-center justify-center gap-2 shadow-xs"
             >
               <Users className="w-5 h-5 text-emerald-600" />
               <span>Soy Candidato: Ver Vacantes</span>
-            </button>
+            </Link>
           </div>
 
           {/* Metric Highlights (Data directly from project study) */}

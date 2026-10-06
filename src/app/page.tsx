@@ -13,8 +13,7 @@ import { INITIAL_VACANCIES, INITIAL_STAFFING_REQUESTS, INITIAL_CANDIDATE_APPLICA
 import { Vacancy, StaffingRequest, CandidateApplication } from '@/types';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<string>('inicio');
-  const [vacancies, setVacancies] = useState<Vacancy[]>(INITIAL_VACANCIES);
+  const [vacancies] = useState<Vacancy[]>(INITIAL_VACANCIES);
   const [requests, setRequests] = useState<StaffingRequest[]>(INITIAL_STAFFING_REQUESTS);
   const [applications, setApplications] = useState<CandidateApplication[]>(INITIAL_CANDIDATE_APPLICATIONS);
 
@@ -41,55 +40,26 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-blue-700 selection:text-white">
       
-      {/* Executive Navbar */}
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* Executive Navbar with Next.js router integration */}
+      <Navbar />
 
-      {/* Main Content Area depending on Active Tab */}
+      {/* Main Multi-Section Scroll Homepage */}
       <main className="flex-1">
-        {activeTab === 'inicio' && (
-          <>
-            <Hero setActiveTab={setActiveTab} />
-            <StaffingVsOutsourcing setActiveTab={setActiveTab} />
-            <CompetitorMatrix />
-            <VacancyList vacancies={vacancies} onAddApplication={handleAddApplication} />
-            <StaffingRequestForm onAddRequest={handleAddRequest} />
-            <HRDashboard applications={applications} requests={requests} />
-          </>
-        )}
+        <Hero />
+        <StaffingVsOutsourcing />
+        <CompetitorMatrix />
+        <VacancyList vacancies={vacancies} onAddApplication={handleAddApplication} />
+        
+        {/* Formulario de Solicitud de Staffing integrado siempre en la landing page */}
+        <div id="solicitud">
+          <StaffingRequestForm onAddRequest={handleAddRequest} />
+        </div>
 
-        {activeTab === 'staffing-vs-outsourcing' && (
-          <div className="pt-4">
-            <StaffingVsOutsourcing setActiveTab={setActiveTab} />
-          </div>
-        )}
-
-        {activeTab === 'vacantes' && (
-          <div className="pt-4">
-            <VacancyList vacancies={vacancies} onAddApplication={handleAddApplication} />
-          </div>
-        )}
-
-        {activeTab === 'competitividad' && (
-          <div className="pt-4">
-            <CompetitorMatrix />
-          </div>
-        )}
-
-        {activeTab === 'solicitud-empresa' && (
-          <div className="pt-4">
-            <StaffingRequestForm onAddRequest={handleAddRequest} />
-          </div>
-        )}
-
-        {activeTab === 'dashboard' && (
-          <div className="pt-4">
-            <HRDashboard applications={applications} requests={requests} />
-          </div>
-        )}
+        <HRDashboard applications={applications} requests={requests} />
       </main>
 
       {/* Corporate Footer */}
-      <Footer setActiveTab={setActiveTab} />
+      <Footer />
     </div>
   );
 }

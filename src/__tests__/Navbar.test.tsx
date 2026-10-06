@@ -1,22 +1,27 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Navbar } from '../components/layout/Navbar';
 
+// Mock next/navigation
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/',
+}));
+
 describe('Navbar Component', () => {
-  it('renders branding and title correctly', () => {
-    render(<Navbar activeTab="inicio" />);
+  it('renders branding, title, and simplified Staffing badge correctly', () => {
+    render(<Navbar />);
     expect(screen.getByText('Soluciones Empresariales')).toBeDefined();
-    expect(screen.getByText('Staffing SV')).toBeDefined();
+    expect(screen.getByText('Staffing')).toBeDefined();
   });
 
-  it('triggers active tab callback on click', () => {
-    const setActiveTabMock = vi.fn();
-    render(<Navbar activeTab="inicio" setActiveTab={setActiveTabMock} />);
+  it('renders navigation links with Next.js hrefs', () => {
+    render(<Navbar />);
     
-    const vacantesBtn = screen.getByText('Bolsa de Trabajo');
-    fireEvent.click(vacantesBtn);
+    const vacantesLink = screen.getByRole('link', { name: /Bolsa de Trabajo/i });
+    expect(vacantesLink.getAttribute('href')).toBe('/vacantes');
     
-    expect(setActiveTabMock).toHaveBeenCalledWith('vacantes');
+    const empresaLink = screen.getByRole('link', { name: /Solicitar Personal/i });
+    expect(empresaLink.getAttribute('href')).toBe('/solicitar-personal');
   });
 });
