@@ -64,6 +64,18 @@ export default function SolicitarPersonalPage() {
             </div>
           </div>
 
+          <div className="mb-8 p-5 rounded-2xl bg-white border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <p className="text-sm text-slate-700">
+              <strong className="text-slate-900">¿Trabajará con nosotros de forma continua?</strong> Registre su empresa para recibir un código de acceso y seguir el avance de sus plazas.
+            </p>
+            <Link
+              href="/registro-empresa"
+              className="shrink-0 px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md text-center"
+            >
+              Registrar mi Empresa
+            </Link>
+          </div>
+
           {/* Detailed Request Form Component */}
           <StaffingRequestForm categories={activeCategoryNames} onAddRequest={handleAddRequest} />
 

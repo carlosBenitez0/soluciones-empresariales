@@ -1,9 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Vacancy, StaffingRequest, CandidateApplication, Category } from '../types';
+import { Vacancy, StaffingRequest, CandidateApplication, Category, ClientCompany, CONFIDENTIAL_COMPANY_NAME } from '../types';
 import { INITIAL_VACANCIES, INITIAL_STAFFING_REQUESTS, INITIAL_CANDIDATE_APPLICATIONS, INITIAL_CATEGORIES } from '../data/mockData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { generateCode } from '../lib/codes';
 
 interface DataContextType {
   vacancies: Vacancy[];
@@ -11,6 +12,7 @@ interface DataContextType {
   candidateApplications: CandidateApplication[];
   categories: Category[];
   activeCategoryNames: string[];
+  clientCompanies: ClientCompany[];
   isLoading: boolean;
   addVacancy: (vacancy: Omit<Vacancy, 'id' | 'postedAt'>) => Promise<Vacancy>;
   updateVacancy: (id: string, updates: Partial<Vacancy>) => Promise<void>;
@@ -22,6 +24,11 @@ interface DataContextType {
   addCategory: (name: string) => Promise<Category>;
   updateCategory: (id: string, updates: Partial<Omit<Category, 'id'>>) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
+  registerClientCompany: (input: Pick<ClientCompany, 'name' | 'contactName' | 'email' | 'phone'>) => Promise<ClientCompany>;
+  approveClientCompany: (id: string) => Promise<ClientCompany | undefined>;
+  updateClientCompany: (id: string, updates: Partial<Omit<ClientCompany, 'id' | 'createdAt'>>) => Promise<void>;
+  regenerateAccessCode: (id: string) => Promise<string | undefined>;
+  deleteClientCompany: (id: string) => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -31,6 +38,7 @@ const LOCAL_STORAGE_KEYS = {
   REQUESTS: 'soluciones_requests_v1',
   APPLICATIONS: 'soluciones_applications_v1',
   CATEGORIES: 'soluciones_categories_v1',
+  COMPANIES: 'soluciones_companies_v1',
 };
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -38,6 +46,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [staffingRequests, setStaffingRequests] = useState<StaffingRequest[]>(INITIAL_STAFFING_REQUESTS);
   const [candidateApplications, setCandidateApplications] = useState<CandidateApplication[]>(INITIAL_CANDIDATE_APPLICATIONS);
   const [categories, setCategories] = useState<Category[]>(INITIAL_CATEGORIES);
+  const [clientCompanies, setClientCompanies] = useState<ClientCompany[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Initial Load from Supabase or LocalStorage
@@ -65,6 +74,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
               postedAt: v.posted_at ? new Date(v.posted_at).toISOString().split('T')[0] : '2026-10-06',
               isUrgent: v.is_urgent ?? false,
               isActive: v.is_active ?? true,
+              companyId: v.company_id ?? undefined,
+              isConfidential: v.company === CONFIDENTIAL_COMPANY_NAME,
             }));
             setVacancies(mappedVacancies);
           }
@@ -111,6 +122,23 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setCandidateApplications(mappedApplications);
           }
 
+          // Fetch Client Companies
+          const { data: compData } = await supabase.from('client_companies').select('*').order('created_at', { ascending: false });
+          if (compData) {
+            setClientCompanies(
+              compData.map((c) => ({
+                id: c.id,
+                name: c.name,
+                contactName: c.contact_name,
+                email: c.email,
+                phone: c.phone,
+                status: c.status,
+                accessCode: c.access_code ?? undefined,
+                createdAt: c.created_at ? new Date(c.created_at).toISOString().split('T')[0] : '',
+              }))
+            );
+          }
+
           // Fetch Categories
           const { data: catData } = await supabase.from('categories').select('*').order('name', { ascending: true });
           if (catData && catData.length > 0) {
@@ -132,6 +160,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           const storedApps = localStorage.getItem(LOCAL_STORAGE_KEYS.APPLICATIONS);
           if (storedApps) setCandidateApplications(JSON.parse(storedApps));
+
+          const storedCompanies = localStorage.getItem(LOCAL_STORAGE_KEYS.COMPANIES);
+          if (storedCompanies) setClientCompanies(JSON.parse(storedCompanies));
 
           const storedCategories = localStorage.getItem(LOCAL_STORAGE_KEYS.CATEGORIES);
           if (storedCategories) setCategories(JSON.parse(storedCategories));
@@ -175,6 +206,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (e) {}
   };
 
+  const saveCompaniesLocal = (newCompanies: ClientCompany[]) => {
+    setClientCompanies(newCompanies);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEYS.COMPANIES, JSON.stringify(newCompanies));
+    } catch (e) {}
+  };
+
   // 1. Add Vacancy
   const addVacancy = async (vacancyInput: Omit<Vacancy, 'id' | 'postedAt'>): Promise<Vacancy> => {
     const today = new Date().toISOString().split('T')[0];
@@ -204,6 +242,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
               benefits: vacancyInput.benefits,
               is_urgent: vacancyInput.isUrgent,
               is_active: vacancyInput.isActive ?? true,
+              company_id: vacancyInput.companyId ?? null,
             },
           ])
           .select()
@@ -242,6 +281,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (updates.benefits) payload.benefits = updates.benefits;
         if (typeof updates.isUrgent === 'boolean') payload.is_urgent = updates.isUrgent;
         if (typeof updates.isActive === 'boolean') payload.is_active = updates.isActive;
+        if ('companyId' in updates) payload.company_id = updates.companyId ?? null;
 
         await supabase.from('vacancies').update(payload).eq('id', id);
       } catch (err) {
@@ -456,6 +496,111 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // 11. Register Client Company (public form, starts as Pendiente)
+  const registerClientCompany = async (
+    input: Pick<ClientCompany, 'name' | 'contactName' | 'email' | 'phone'>
+  ): Promise<ClientCompany> => {
+    const newCompany: ClientCompany = {
+      ...input,
+      id: `emp-${Date.now()}`,
+      status: 'Pendiente',
+      createdAt: new Date().toISOString().split('T')[0],
+    };
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data } = await supabase
+          .from('client_companies')
+          .insert([
+            {
+              name: input.name,
+              contact_name: input.contactName,
+              email: input.email,
+              phone: input.phone,
+              status: 'Pendiente',
+            },
+          ])
+          .select()
+          .single();
+        if (data) newCompany.id = data.id;
+      } catch (err) {
+        console.error('Error inserting client company into Supabase:', err);
+      }
+    }
+
+    saveCompaniesLocal([newCompany, ...clientCompanies]);
+    return newCompany;
+  };
+
+  // 12. Update Client Company
+  const updateClientCompany = async (
+    id: string,
+    updates: Partial<Omit<ClientCompany, 'id' | 'createdAt'>>
+  ): Promise<void> => {
+    saveCompaniesLocal(clientCompanies.map((c) => (c.id === id ? { ...c, ...updates } : c)));
+
+    // Keep the public company name of its non-confidential vacancies in sync
+    const newName = updates.name;
+    if (newName) {
+      saveVacanciesLocal(
+        vacancies.map((v) => (v.companyId === id && !v.isConfidential ? { ...v, company: newName } : v))
+      );
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const payload: Record<string, string | null> = {};
+        if (updates.name) payload.name = updates.name;
+        if (updates.contactName) payload.contact_name = updates.contactName;
+        if (updates.email) payload.email = updates.email;
+        if (updates.phone) payload.phone = updates.phone;
+        if (updates.status) payload.status = updates.status;
+        if ('accessCode' in updates) payload.access_code = updates.accessCode ?? null;
+        await supabase.from('client_companies').update(payload).eq('id', id);
+        if (newName) {
+          await supabase
+            .from('vacancies')
+            .update({ company: newName })
+            .eq('company_id', id)
+            .neq('company', CONFIDENTIAL_COMPANY_NAME);
+        }
+      } catch (err) {
+        console.error('Error updating client company in Supabase:', err);
+      }
+    }
+  };
+
+  // 13. Approve Client Company (generates its portal access code)
+  const approveClientCompany = async (id: string): Promise<ClientCompany | undefined> => {
+    const company = clientCompanies.find((c) => c.id === id);
+    if (!company) return undefined;
+    const accessCode = company.accessCode ?? generateCode('EMP');
+    await updateClientCompany(id, { status: 'Aprobada', accessCode });
+    return { ...company, status: 'Aprobada', accessCode };
+  };
+
+  // 14. Regenerate access code (invalidates the previous one)
+  const regenerateAccessCode = async (id: string): Promise<string | undefined> => {
+    if (!clientCompanies.some((c) => c.id === id)) return undefined;
+    const accessCode = generateCode('EMP');
+    await updateClientCompany(id, { accessCode });
+    return accessCode;
+  };
+
+  // 15. Delete Client Company (its vacancies stay published, just unlinked)
+  const deleteClientCompany = async (id: string): Promise<void> => {
+    saveCompaniesLocal(clientCompanies.filter((c) => c.id !== id));
+    saveVacanciesLocal(vacancies.map((v) => (v.companyId === id ? { ...v, companyId: undefined } : v)));
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('client_companies').delete().eq('id', id);
+      } catch (err) {
+        console.error('Error deleting client company in Supabase:', err);
+      }
+    }
+  };
+
   const activeCategoryNames = categories.filter((c) => c.isActive).map((c) => c.name);
 
   return (
@@ -466,6 +611,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         candidateApplications,
         categories,
         activeCategoryNames,
+        clientCompanies,
         isLoading,
         addVacancy,
         updateVacancy,
@@ -477,6 +623,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addCategory,
         updateCategory,
         deleteCategory,
+        registerClientCompany,
+        approveClientCompany,
+        updateClientCompany,
+        regenerateAccessCode,
+        deleteClientCompany,
       }}
     >
       {children}

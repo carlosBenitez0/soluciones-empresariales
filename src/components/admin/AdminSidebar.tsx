@@ -20,15 +20,17 @@ import {
   X,
   ChevronRight,
   Tags,
+  Building,
 } from 'lucide-react';
 
 export const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuth();
-  const { vacancies, staffingRequests, candidateApplications } = useData();
+  const { vacancies, staffingRequests, candidateApplications, clientCompanies } = useData();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
+  const pendingCompaniesCount = clientCompanies.filter((c) => c.status === 'Pendiente').length;
   const pendingRequestsCount = staffingRequests.filter((r) => r.status.includes('Pendiente')).length;
   const activeApplicationsCount = candidateApplications.filter((a) => a.status !== 'Contratación y Firma').length;
 
@@ -55,6 +57,13 @@ export const AdminSidebar: React.FC = () => {
       href: '/admin/categorias',
       icon: Tags,
       badge: null,
+    },
+    {
+      label: 'Empresas Clientes',
+      href: '/admin/empresas',
+      icon: Building,
+      badge: pendingCompaniesCount > 0 ? pendingCompaniesCount : null,
+      badgeColor: 'bg-amber-500 text-slate-950 font-black',
     },
     {
       label: 'Solicitudes B2B',

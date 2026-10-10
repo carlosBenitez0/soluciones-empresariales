@@ -26,6 +26,25 @@ export interface Vacancy {
   postedAt: string;
   isUrgent?: boolean;
   isActive?: boolean;
+  /** Empresa cliente dueña de la plaza. `company` es el nombre que se muestra al público. */
+  companyId?: string;
+  isConfidential?: boolean;
+}
+
+export const CONFIDENTIAL_COMPANY_NAME = 'Empresa Cliente Confidencial';
+
+export type ClientCompanyStatus = 'Pendiente' | 'Aprobada' | 'Inactiva';
+
+export interface ClientCompany {
+  id: string;
+  name: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  status: ClientCompanyStatus;
+  /** Código para entrar al portal de empresa. Se genera al aprobarla. */
+  accessCode?: string;
+  createdAt: string;
 }
 
 export type PipelineStage = 

@@ -73,6 +73,11 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link href="/registro-empresa" className="hover:text-white transition-colors">
+                  Registrar mi Empresa
+                </Link>
+              </li>
+              <li>
                 <Link href="/gestion-rrhh" className="hover:text-emerald-400 transition-colors">
                   Centro Operativo RRHH
                 </Link>

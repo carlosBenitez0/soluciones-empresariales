@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
-import { Vacancy, JobCategory, WorkMode } from '@/types';
+import { Vacancy, JobCategory, WorkMode, CONFIDENTIAL_COMPANY_NAME } from '@/types';
 import { Plus, Search, Edit2, Trash2, Sparkles, X, Briefcase, Power } from 'lucide-react';
 
 export default function AdminVacantesPage() {
   const { isAdmin } = useAuth();
-  const { vacancies, categories: allCategories, activeCategoryNames, addVacancy, updateVacancy, deleteVacancy } = useData();
+  const { vacancies, categories: allCategories, activeCategoryNames, clientCompanies, addVacancy, updateVacancy, deleteVacancy } = useData();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,7 +20,10 @@ export default function AdminVacantesPage() {
 
   // Form State
   const [title, setTitle] = useState('');
-  const [company, setCompany] = useState('Empresa Cliente Confidencial');
+  const [companyId, setCompanyId] = useState('');
+  const [isConfidential, setIsConfidential] = useState(false);
+  // Name of vacancies created before companies were registered (no companyId)
+  const [legacyCompany, setLegacyCompany] = useState('');
   const [category, setCategory] = useState<JobCategory>('Administración');
   const [location, setLocation] = useState('Chalatenango Sur');
   const [workMode, setWorkMode] = useState<WorkMode>('Presencial');
@@ -41,9 +44,14 @@ export default function AdminVacantesPage() {
 
   const categories = ['Todas', ...allCategories.map((c) => c.name)];
 
+  const companyName = (vac: Vacancy) =>
+    clientCompanies.find((c) => c.id === vac.companyId)?.name ?? vac.company;
+
+  const selectableCompanies = clientCompanies.filter((c) => c.status === 'Aprobada' || c.id === companyId);
+
   const filteredVacancies = vacancies.filter((vac) => {
     const matchesSearch = vac.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          vac.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          companyName(vac).toLowerCase().includes(searchTerm.toLowerCase()) ||
                           vac.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'Todas' || vac.category === selectedCategory;
     const isActive = vac.isActive !== false;
@@ -55,7 +63,9 @@ export default function AdminVacantesPage() {
   const openCreateModal = () => {
     setEditingVacancy(null);
     setTitle('');
-    setCompany('Empresa Cliente Confidencial');
+    setCompanyId('');
+    setIsConfidential(false);
+    setLegacyCompany('');
     setCategory(activeCategoryNames[0] ?? '');
     setLocation('Chalatenango Sur');
     setWorkMode('Presencial');
@@ -71,7 +81,9 @@ export default function AdminVacantesPage() {
   const openEditModal = (vac: Vacancy) => {
     setEditingVacancy(vac);
     setTitle(vac.title);
-    setCompany(vac.company);
+    setCompanyId(vac.companyId ?? '');
+    setIsConfidential(Boolean(vac.isConfidential) || (!vac.companyId && vac.company === CONFIDENTIAL_COMPANY_NAME));
+    setLegacyCompany(vac.companyId ? '' : vac.company === CONFIDENTIAL_COMPANY_NAME ? '' : vac.company);
     setCategory(vac.category);
     setLocation(vac.location);
     setWorkMode(vac.workMode);
@@ -92,9 +104,16 @@ export default function AdminVacantesPage() {
     const responsibilitiesArr = responsibilitiesInput.split('\n').filter((line) => line.trim().length > 0);
     const benefitsArr = benefitsInput.split('\n').filter((line) => line.trim().length > 0);
 
+    const selectedCompany = clientCompanies.find((c) => c.id === companyId);
+    const publicCompanyName = isConfidential
+      ? CONFIDENTIAL_COMPANY_NAME
+      : selectedCompany?.name || legacyCompany || CONFIDENTIAL_COMPANY_NAME;
+
     const payload = {
       title,
-      company: company || 'Empresa Cliente Confidencial',
+      company: publicCompanyName,
+      companyId: companyId || undefined,
+      isConfidential: publicCompanyName === CONFIDENTIAL_COMPANY_NAME,
       category,
       location,
       workMode,
@@ -224,7 +243,14 @@ export default function AdminVacantesPage() {
                           </span>
                         </td>
                         <td className="py-3.5 px-4">
-                          <span className="font-semibold text-slate-800 block">{vac.company}</span>
+                          <span className="font-semibold text-slate-800 block">
+                            {companyName(vac)}
+                            {vac.isConfidential && vac.companyId && (
+                              <span className="ml-1.5 text-[9px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-600 font-bold uppercase">
+                                Confidencial
+                              </span>
+                            )}
+                          </span>
                           <span className="text-slate-500 text-[11px]">{vac.location}</span>
                         </td>
                         <td className="py-3.5 px-4 font-bold text-slate-900">
@@ -320,14 +346,31 @@ export default function AdminVacantesPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Empresa Cliente (o Confidencial)</label>
-                  <input
-                    type="text"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    placeholder="Empresa Cliente Confidencial"
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Empresa Cliente</label>
+                  <select
+                    value={companyId}
+                    onChange={(e) => {
+                      setCompanyId(e.target.value);
+                      if (e.target.value) setLegacyCompany('');
+                    }}
                     className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm font-semibold shadow-xs"
-                  />
+                  >
+                    <option value="">{legacyCompany ? `${legacyCompany} (sin registrar)` : '— Sin empresa registrada —'}</option>
+                    {selectableCompanies.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}{c.status !== 'Aprobada' ? ` (${c.status})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                  <label className="flex items-center gap-2 mt-2 text-[11px] font-semibold text-slate-600 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isConfidential}
+                      onChange={(e) => setIsConfidential(e.target.checked)}
+                      className="w-3.5 h-3.5 rounded border-slate-300"
+                    />
+                    Publicar como &quot;{CONFIDENTIAL_COMPANY_NAME}&quot;
+                  </label>
                 </div>
 
                 <div>
