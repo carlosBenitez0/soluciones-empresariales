@@ -63,11 +63,6 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/staffing-vs-outsourcing" className="hover:text-white transition-colors">
-                  Staffing vs. Outsourcing
-                </Link>
-              </li>
-              <li>
                 <Link href="/vacantes" className="hover:text-white transition-colors">
                   Bolsa de Empleo Activa
                 </Link>

@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Hero } from '@/components/landing/Hero';
-import { StaffingVsOutsourcing } from '@/components/landing/StaffingVsOutsourcing';
 import { CompetitorMatrix } from '@/components/landing/CompetitorMatrix';
 import { VacancyList } from '@/components/vacancies/VacancyList';
 import { StaffingRequestForm } from '@/components/enterprise/StaffingRequestForm';
@@ -46,7 +45,6 @@ export default function Home() {
       {/* Main Multi-Section Scroll Homepage */}
       <main className="flex-1">
         <Hero />
-        <StaffingVsOutsourcing />
         <CompetitorMatrix />
         <VacancyList vacancies={vacancies} onAddApplication={handleAddApplication} />
         

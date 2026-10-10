@@ -24,7 +24,6 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { name: 'Inicio', href: '/' },
-    { name: 'Staffing vs Outsourcing', href: '/staffing-vs-outsourcing' },
     { name: 'Bolsa de Trabajo', href: '/vacantes' },
     { name: 'Por Qué Elegirnos', href: '/competitividad' },
     { name: 'Consultar Estado', href: '/seguimiento', icon: Search },
