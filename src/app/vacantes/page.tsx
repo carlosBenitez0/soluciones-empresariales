@@ -50,7 +50,7 @@ export default function VacantesPage() {
           </div>
 
           {/* Vacancies List Component */}
-          <VacancyList vacancies={vacancies} onAddApplication={handleAddApplication} />
+          <VacancyList vacancies={vacancies.filter((v) => v.isActive !== false)} onAddApplication={handleAddApplication} />
 
         </div>
       </main>

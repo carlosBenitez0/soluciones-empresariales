@@ -47,7 +47,7 @@ export const AdminSidebar: React.FC = () => {
       label: 'Gestión de Vacantes',
       href: '/admin/vacantes',
       icon: Briefcase,
-      badge: vacancies.length,
+      badge: vacancies.filter((v) => v.isActive !== false).length,
     },
     {
       label: 'Solicitudes B2B',

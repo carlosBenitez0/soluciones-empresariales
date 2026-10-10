@@ -57,6 +57,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
               benefits: v.benefits || [],
               postedAt: v.posted_at ? new Date(v.posted_at).toISOString().split('T')[0] : '2026-10-06',
               isUrgent: v.is_urgent ?? false,
+              isActive: v.is_active ?? true,
             }));
             setVacancies(mappedVacancies);
           }
@@ -154,6 +155,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const today = new Date().toISOString().split('T')[0];
     const newId = `vac-${Date.now()}`;
     const newVacancy: Vacancy = {
+      isActive: true,
       ...vacancyInput,
       id: newId,
       postedAt: today,
@@ -176,6 +178,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
               responsibilities: vacancyInput.responsibilities,
               benefits: vacancyInput.benefits,
               is_urgent: vacancyInput.isUrgent,
+              is_active: vacancyInput.isActive ?? true,
             },
           ])
           .select()
@@ -213,6 +216,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (updates.responsibilities) payload.responsibilities = updates.responsibilities;
         if (updates.benefits) payload.benefits = updates.benefits;
         if (typeof updates.isUrgent === 'boolean') payload.is_urgent = updates.isUrgent;
+        if (typeof updates.isActive === 'boolean') payload.is_active = updates.isActive;
 
         await supabase.from('vacancies').update(payload).eq('id', id);
       } catch (err) {

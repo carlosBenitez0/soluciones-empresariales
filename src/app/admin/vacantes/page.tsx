@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { Vacancy, JobCategory, WorkMode } from '@/types';
-import { Plus, Search, Edit2, Trash2, Sparkles, CheckCircle2, X, Briefcase, MapPin, DollarSign, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { Plus, Search, Edit2, Trash2, Sparkles, X, Briefcase, Power } from 'lucide-react';
 
 export default function AdminVacantesPage() {
   const { isAdmin } = useAuth();
@@ -15,6 +14,7 @@ export default function AdminVacantesPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
+  const [selectedStatus, setSelectedStatus] = useState<'Todas' | 'Activas' | 'Inactivas'>('Todas');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingVacancy, setEditingVacancy] = useState<Vacancy | null>(null);
 
@@ -46,7 +46,10 @@ export default function AdminVacantesPage() {
                           vac.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           vac.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'Todas' || vac.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const isActive = vac.isActive !== false;
+    const matchesStatus =
+      selectedStatus === 'Todas' || (selectedStatus === 'Activas' ? isActive : !isActive);
+    return matchesSearch && matchesCategory && matchesStatus;
   });
 
   const openCreateModal = () => {
@@ -122,6 +125,10 @@ export default function AdminVacantesPage() {
     await updateVacancy(vac.id, { isUrgent: !vac.isUrgent });
   };
 
+  const toggleActive = async (vac: Vacancy) => {
+    await updateVacancy(vac.id, { isActive: vac.isActive === false });
+  };
+
   return (
     <>
       <div className="space-y-6 pb-10">
@@ -166,6 +173,15 @@ export default function AdminVacantesPage() {
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value as 'Todas' | 'Activas' | 'Inactivas')}
+                className="py-2 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:outline-none"
+              >
+                <option value="Todas">Todos los estados</option>
+                <option value="Activas">Activas</option>
+                <option value="Inactivas">Inactivas</option>
+              </select>
             </div>
           </div>
 
@@ -179,6 +195,7 @@ export default function AdminVacantesPage() {
                     <th className="py-3.5 px-4 font-bold">Categoría & Modalidad</th>
                     <th className="py-3.5 px-4 font-bold">Empresa / Ubicación</th>
                     <th className="py-3.5 px-4 font-bold">Salario ($ USD)</th>
+                    <th className="py-3.5 px-4 font-bold">Estado</th>
                     <th className="py-3.5 px-4 font-bold">Urgencia</th>
                     <th className="py-3.5 px-4 font-bold text-right">Acciones</th>
                   </tr>
@@ -186,13 +203,16 @@ export default function AdminVacantesPage() {
                 <tbody className="divide-y divide-slate-100 text-xs">
                   {filteredVacancies.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500 font-medium">
+                      <td colSpan={7} className="py-8 text-center text-slate-500 font-medium">
                         No se encontraron vacantes registradas.
                       </td>
                     </tr>
                   ) : (
                     filteredVacancies.map((vac) => (
-                      <tr key={vac.id} className="hover:bg-slate-50/70 transition-colors">
+                      <tr
+                        key={vac.id}
+                        className={`hover:bg-slate-50/70 transition-colors ${vac.isActive === false ? 'opacity-60' : ''}`}
+                      >
                         <td className="py-3.5 px-4">
                           <span className="font-extrabold text-slate-900 block">{vac.title}</span>
                           <span className="text-[10px] text-slate-400">Publicado: {vac.postedAt}</span>
@@ -209,6 +229,20 @@ export default function AdminVacantesPage() {
                         </td>
                         <td className="py-3.5 px-4 font-bold text-slate-900">
                           {vac.salaryRange}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <button
+                            onClick={() => toggleActive(vac)}
+                            title={vac.isActive === false ? 'Activar vacante' : 'Desactivar vacante'}
+                            className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors flex items-center gap-1 ${
+                              vac.isActive === false
+                                ? 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+                                : 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                            }`}
+                          >
+                            <Power className={`w-3 h-3 ${vac.isActive === false ? 'text-slate-400' : 'text-emerald-700'}`} />
+                            <span>{vac.isActive === false ? 'Inactiva' : 'Activa'}</span>
+                          </button>
                         </td>
                         <td className="py-3.5 px-4">
                           <button

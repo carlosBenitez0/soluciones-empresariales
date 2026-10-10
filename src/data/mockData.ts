@@ -27,6 +27,7 @@ export const INITIAL_VACANCIES: Vacancy[] = [
     ],
     postedAt: '2026-09-28',
     isUrgent: true,
+    isActive: true,
   },
   {
     id: 'vac-2',
@@ -54,6 +55,7 @@ export const INITIAL_VACANCIES: Vacancy[] = [
     ],
     postedAt: '2026-10-01',
     isUrgent: false,
+    isActive: true,
   },
   {
     id: 'vac-3',
@@ -81,6 +83,7 @@ export const INITIAL_VACANCIES: Vacancy[] = [
     ],
     postedAt: '2026-10-02',
     isUrgent: true,
+    isActive: true,
   },
   {
     id: 'vac-4',
@@ -108,6 +111,7 @@ export const INITIAL_VACANCIES: Vacancy[] = [
     ],
     postedAt: '2026-10-03',
     isUrgent: false,
+    isActive: true,
   },
   {
     id: 'vac-5',
@@ -135,6 +139,7 @@ export const INITIAL_VACANCIES: Vacancy[] = [
     ],
     postedAt: '2026-10-04',
     isUrgent: false,
+    isActive: true,
   },
   {
     id: 'vac-6',
@@ -162,6 +167,7 @@ export const INITIAL_VACANCIES: Vacancy[] = [
     ],
     postedAt: '2026-10-05',
     isUrgent: true,
+    isActive: true,
   },
   {
     id: 'vac-7',
@@ -189,6 +195,7 @@ export const INITIAL_VACANCIES: Vacancy[] = [
     ],
     postedAt: '2026-10-05',
     isUrgent: false,
+    isActive: true,
   }
 ];
 

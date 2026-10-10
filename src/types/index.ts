@@ -18,6 +18,7 @@ export interface Vacancy {
   benefits: string[];
   postedAt: string;
   isUrgent?: boolean;
+  isActive?: boolean;
 }
 
 export type PipelineStage = 
