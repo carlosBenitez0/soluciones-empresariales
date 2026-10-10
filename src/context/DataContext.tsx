@@ -1,14 +1,16 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Vacancy, StaffingRequest, CandidateApplication } from '../types';
-import { INITIAL_VACANCIES, INITIAL_STAFFING_REQUESTS, INITIAL_CANDIDATE_APPLICATIONS } from '../data/mockData';
+import { Vacancy, StaffingRequest, CandidateApplication, Category } from '../types';
+import { INITIAL_VACANCIES, INITIAL_STAFFING_REQUESTS, INITIAL_CANDIDATE_APPLICATIONS, INITIAL_CATEGORIES } from '../data/mockData';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 interface DataContextType {
   vacancies: Vacancy[];
   staffingRequests: StaffingRequest[];
   candidateApplications: CandidateApplication[];
+  categories: Category[];
+  activeCategoryNames: string[];
   isLoading: boolean;
   addVacancy: (vacancy: Omit<Vacancy, 'id' | 'postedAt'>) => Promise<Vacancy>;
   updateVacancy: (id: string, updates: Partial<Vacancy>) => Promise<void>;
@@ -17,6 +19,9 @@ interface DataContextType {
   updateStaffingRequest: (id: string, updates: Partial<StaffingRequest>) => Promise<void>;
   addCandidateApplication: (app: Omit<CandidateApplication, 'id' | 'trackingCode' | 'appliedAt' | 'status'>) => Promise<CandidateApplication>;
   updateCandidateApplication: (id: string, updates: Partial<CandidateApplication>) => Promise<void>;
+  addCategory: (name: string) => Promise<Category>;
+  updateCategory: (id: string, updates: Partial<Omit<Category, 'id'>>) => Promise<void>;
+  deleteCategory: (id: string) => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -25,12 +30,14 @@ const LOCAL_STORAGE_KEYS = {
   VACANCIES: 'soluciones_vacancies_v1',
   REQUESTS: 'soluciones_requests_v1',
   APPLICATIONS: 'soluciones_applications_v1',
+  CATEGORIES: 'soluciones_categories_v1',
 };
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [vacancies, setVacancies] = useState<Vacancy[]>(INITIAL_VACANCIES);
   const [staffingRequests, setStaffingRequests] = useState<StaffingRequest[]>(INITIAL_STAFFING_REQUESTS);
   const [candidateApplications, setCandidateApplications] = useState<CandidateApplication[]>(INITIAL_CANDIDATE_APPLICATIONS);
+  const [categories, setCategories] = useState<Category[]>(INITIAL_CATEGORIES);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Initial Load from Supabase or LocalStorage
@@ -103,6 +110,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }));
             setCandidateApplications(mappedApplications);
           }
+
+          // Fetch Categories
+          const { data: catData } = await supabase.from('categories').select('*').order('name', { ascending: true });
+          if (catData && catData.length > 0) {
+            setCategories(
+              catData.map((c) => ({ id: c.id, name: c.name, isActive: c.is_active ?? true }))
+            );
+          }
         } catch (err) {
           console.error('Error loading data from Supabase:', err);
         }
@@ -117,6 +132,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           const storedApps = localStorage.getItem(LOCAL_STORAGE_KEYS.APPLICATIONS);
           if (storedApps) setCandidateApplications(JSON.parse(storedApps));
+
+          const storedCategories = localStorage.getItem(LOCAL_STORAGE_KEYS.CATEGORIES);
+          if (storedCategories) setCategories(JSON.parse(storedCategories));
         } catch (e) {
           console.error('Error reading from localStorage:', e);
         }
@@ -147,6 +165,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCandidateApplications(newApps);
     try {
       localStorage.setItem(LOCAL_STORAGE_KEYS.APPLICATIONS, JSON.stringify(newApps));
+    } catch (e) {}
+  };
+
+  const saveCategoriesLocal = (newCategories: Category[]) => {
+    setCategories(newCategories);
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEYS.CATEGORIES, JSON.stringify(newCategories));
     } catch (e) {}
   };
 
@@ -370,12 +395,77 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // 8. Add Category
+  const addCategory = async (name: string): Promise<Category> => {
+    const newCategory: Category = { id: `cat-${Date.now()}`, name: name.trim(), isActive: true };
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { data } = await supabase
+          .from('categories')
+          .insert([{ name: newCategory.name, is_active: true }])
+          .select()
+          .single();
+        if (data) newCategory.id = data.id;
+      } catch (err) {
+        console.error('Error inserting category into Supabase:', err);
+      }
+    }
+
+    saveCategoriesLocal([...categories, newCategory]);
+    return newCategory;
+  };
+
+  // 9. Update Category (renaming also moves the vacancies that used the old name)
+  const updateCategory = async (id: string, updates: Partial<Omit<Category, 'id'>>): Promise<void> => {
+    const current = categories.find((c) => c.id === id);
+    if (!current) return;
+    const newName = updates.name?.trim();
+    const isRename = Boolean(newName && newName !== current.name);
+
+    saveCategoriesLocal(categories.map((c) => (c.id === id ? { ...c, ...updates, ...(newName ? { name: newName } : {}) } : c)));
+    if (isRename) {
+      saveVacanciesLocal(vacancies.map((v) => (v.category === current.name ? { ...v, category: newName! } : v)));
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const payload: Record<string, string | boolean> = {};
+        if (newName) payload.name = newName;
+        if (typeof updates.isActive === 'boolean') payload.is_active = updates.isActive;
+        await supabase.from('categories').update(payload).eq('id', id);
+        if (isRename) {
+          await supabase.from('vacancies').update({ category: newName }).eq('category', current.name);
+        }
+      } catch (err) {
+        console.error('Error updating category in Supabase:', err);
+      }
+    }
+  };
+
+  // 10. Delete Category (callers must make sure no vacancy uses it)
+  const deleteCategory = async (id: string): Promise<void> => {
+    saveCategoriesLocal(categories.filter((c) => c.id !== id));
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('categories').delete().eq('id', id);
+      } catch (err) {
+        console.error('Error deleting category in Supabase:', err);
+      }
+    }
+  };
+
+  const activeCategoryNames = categories.filter((c) => c.isActive).map((c) => c.name);
+
   return (
     <DataContext.Provider
       value={{
         vacancies,
         staffingRequests,
         candidateApplications,
+        categories,
+        activeCategoryNames,
         isLoading,
         addVacancy,
         updateVacancy,
@@ -384,6 +474,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateStaffingRequest,
         addCandidateApplication,
         updateCandidateApplication,
+        addCategory,
+        updateCategory,
+        deleteCategory,
       }}
     >
       {children}

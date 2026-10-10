@@ -3,20 +3,22 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { StaffingRequest, RequestType, JobCategory } from '../../types';
+import { DEFAULT_CATEGORY_NAMES } from '../../data/mockData';
 import { Building2, CheckCircle2, ArrowRight } from 'lucide-react';
 
 interface StaffingRequestFormProps {
   onAddRequest: (request: Omit<StaffingRequest, 'id' | 'submittedAt' | 'status'>) => void;
+  categories?: string[];
 }
 
-export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddRequest }) => {
+export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddRequest, categories = DEFAULT_CATEGORY_NAMES }) => {
   const [companyName, setCompanyName] = useState('');
   const [contactName, setContactName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [requestType, setRequestType] = useState<RequestType>('Plaza Nueva');
   const [positionTitle, setPositionTitle] = useState('');
-  const [category, setCategory] = useState<JobCategory>('Administración');
+  const [category, setCategory] = useState<JobCategory>(categories[0] ?? '');
   const [numberOfPositions, setNumberOfPositions] = useState<number>(1);
   const [salaryBudget, setSalaryBudget] = useState('');
   const [keyRequirements, setKeyRequirements] = useState('');
@@ -184,12 +186,9 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
                     onChange={(e) => setCategory(e.target.value as JobCategory)}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 focus:outline-none focus:border-blue-700 text-sm shadow-xs font-medium"
                   >
-                    <option value="Administración">Administración</option>
-                    <option value="Finanzas y Contabilidad">Finanzas y Contabilidad</option>
-                    <option value="Operaciones y Logística">Operaciones y Logística</option>
-                    <option value="Ventas y Atención al Cliente">Ventas y Atención al Cliente</option>
-                    <option value="Tecnología">Tecnología</option>
-                    <option value="Recursos Humanos">Recursos Humanos</option>
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
                   </select>
                 </div>
               </div>

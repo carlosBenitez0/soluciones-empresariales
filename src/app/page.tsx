@@ -12,7 +12,7 @@ import { useData } from '@/context/DataContext';
 import { StaffingRequest, CandidateApplication } from '@/types';
 
 export default function Home() {
-  const { vacancies, staffingRequests, candidateApplications, addCandidateApplication, addStaffingRequest } = useData();
+  const { vacancies, staffingRequests, candidateApplications, activeCategoryNames, addCandidateApplication, addStaffingRequest } = useData();
   const activeVacancies = vacancies.filter((v) => v.isActive !== false);
 
   const handleAddApplication = async (newApp: Omit<CandidateApplication, 'id' | 'appliedAt' | 'status'>) => {
@@ -33,11 +33,11 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <CompetitorMatrix />
-        <VacancyList vacancies={activeVacancies} onAddApplication={handleAddApplication} />
+        <VacancyList vacancies={activeVacancies} categories={activeCategoryNames} onAddApplication={handleAddApplication} />
         
         {/* Formulario de Solicitud de Staffing integrado siempre en la landing page */}
         <div id="solicitud">
-          <StaffingRequestForm onAddRequest={handleAddRequest} />
+          <StaffingRequestForm categories={activeCategoryNames} onAddRequest={handleAddRequest} />
         </div>
 
         <HRDashboard applications={candidateApplications} requests={staffingRequests} />

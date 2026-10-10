@@ -3,20 +3,21 @@
 import React, { useState } from 'react';
 import { Vacancy, CandidateApplication } from '../../types';
 import { VacancyModal } from './VacancyModal';
+import { DEFAULT_CATEGORY_NAMES } from '../../data/mockData';
 import { Search, Filter, Briefcase, MapPin, DollarSign, ArrowRight, Sparkles } from 'lucide-react';
 
 interface VacancyListProps {
   vacancies: Vacancy[];
   onAddApplication: (app: Omit<CandidateApplication, 'id' | 'appliedAt' | 'status'>) => void;
+  categories?: string[];
 }
 
-export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onAddApplication }) => {
+export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onAddApplication, categories = DEFAULT_CATEGORY_NAMES }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
   const [selectedWorkMode, setSelectedWorkMode] = useState<string>('Todos');
   const [selectedVacancy, setSelectedVacancy] = useState<Vacancy | null>(null);
 
-  const categories = ['Todas', 'Finanzas y Contabilidad', 'Operaciones y Logística', 'Ventas y Atención al Cliente', 'Administración', 'Tecnología'];
   const workModes = ['Todos', 'Presencial', 'Híbrido', 'Remoto'];
 
   const filteredVacancies = vacancies.filter((vac) => {
@@ -72,7 +73,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onAddApplic
                 className="w-full lg:w-auto pl-10 pr-8 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-800 text-sm focus:outline-none focus:border-blue-600 shadow-xs font-semibold appearance-none cursor-pointer"
               >
                 <option value="Todas">Todas las áreas</option>
-                {categories.filter(c => c !== 'Todas').map((cat) => (
+                {categories.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>

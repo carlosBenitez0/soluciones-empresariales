@@ -9,7 +9,7 @@ import { Plus, Search, Edit2, Trash2, Sparkles, X, Briefcase, Power } from 'luci
 
 export default function AdminVacantesPage() {
   const { isAdmin } = useAuth();
-  const { vacancies, addVacancy, updateVacancy, deleteVacancy } = useData();
+  const { vacancies, categories: allCategories, activeCategoryNames, addVacancy, updateVacancy, deleteVacancy } = useData();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,7 +39,7 @@ export default function AdminVacantesPage() {
 
   if (!isAdmin) return null;
 
-  const categories = ['Todas', 'Finanzas y Contabilidad', 'Operaciones y Logística', 'Ventas y Atención al Cliente', 'Administración', 'Tecnología'];
+  const categories = ['Todas', ...allCategories.map((c) => c.name)];
 
   const filteredVacancies = vacancies.filter((vac) => {
     const matchesSearch = vac.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -56,7 +56,7 @@ export default function AdminVacantesPage() {
     setEditingVacancy(null);
     setTitle('');
     setCompany('Empresa Cliente Confidencial');
-    setCategory('Administración');
+    setCategory(activeCategoryNames[0] ?? '');
     setLocation('Chalatenango Sur');
     setWorkMode('Presencial');
     setSalaryRange('$500 - $700 USD');
@@ -337,11 +337,13 @@ export default function AdminVacantesPage() {
                     onChange={(e) => setCategory(e.target.value as JobCategory)}
                     className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm font-semibold shadow-xs"
                   >
-                    <option value="Finanzas y Contabilidad">Finanzas y Contabilidad</option>
-                    <option value="Operaciones y Logística">Operaciones y Logística</option>
-                    <option value="Ventas y Atención al Cliente">Ventas y Atención al Cliente</option>
-                    <option value="Administración">Administración</option>
-                    <option value="Tecnología">Tecnología</option>
+                    {activeCategoryNames.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                    {/* Keep the current value selectable when editing a vacancy whose category was deactivated */}
+                    {category && !activeCategoryNames.includes(category) && (
+                      <option value={category}>{category} (inactiva)</option>
+                    )}
                   </select>
                 </div>
               </div>

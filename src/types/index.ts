@@ -1,7 +1,14 @@
 // Types for Soluciones Empresariales Staffing Platform
 
 export type WorkMode = 'Presencial' | 'Híbrido' | 'Remoto';
-export type JobCategory = 'Administración' | 'Finanzas y Contabilidad' | 'Operaciones y Logística' | 'Tecnología' | 'Ventas y Atención al Cliente' | 'Recursos Humanos';
+// Las categorías se administran desde el panel (tabla `categories`), por eso es un string libre.
+export type JobCategory = string;
+
+export interface Category {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
 export type RequestType = 'Plaza Nueva' | 'Reemplazo';
 
 export interface Vacancy {

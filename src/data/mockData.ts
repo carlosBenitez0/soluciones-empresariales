@@ -1,4 +1,4 @@
-import { Vacancy, CompetitorComparison, StaffingRequest, CandidateApplication } from '../types';
+import { Vacancy, CompetitorComparison, StaffingRequest, CandidateApplication, Category } from '../types';
 
 export const INITIAL_VACANCIES: Vacancy[] = [
   {
@@ -198,6 +198,17 @@ export const INITIAL_VACANCIES: Vacancy[] = [
     isActive: true,
   }
 ];
+
+export const INITIAL_CATEGORIES: Category[] = [
+  { id: 'cat-1', name: 'Administración', isActive: true },
+  { id: 'cat-2', name: 'Finanzas y Contabilidad', isActive: true },
+  { id: 'cat-3', name: 'Operaciones y Logística', isActive: true },
+  { id: 'cat-4', name: 'Ventas y Atención al Cliente', isActive: true },
+  { id: 'cat-5', name: 'Tecnología', isActive: true },
+  { id: 'cat-6', name: 'Recursos Humanos', isActive: true },
+];
+
+export const DEFAULT_CATEGORY_NAMES = INITIAL_CATEGORIES.map((c) => c.name);
 
 export const COMPETITOR_COMPARISON: CompetitorComparison[] = [
   {

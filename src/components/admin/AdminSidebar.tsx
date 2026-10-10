@@ -19,6 +19,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  Tags,
 } from 'lucide-react';
 
 export const AdminSidebar: React.FC = () => {
@@ -48,6 +49,12 @@ export const AdminSidebar: React.FC = () => {
       href: '/admin/vacantes',
       icon: Briefcase,
       badge: vacancies.filter((v) => v.isActive !== false).length,
+    },
+    {
+      label: 'Categorías',
+      href: '/admin/categorias',
+      icon: Tags,
+      badge: null,
     },
     {
       label: 'Solicitudes B2B',

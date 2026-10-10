@@ -10,7 +10,7 @@ import { Building2, Clock, ShieldCheck, Zap, ArrowLeft, CheckCircle2 } from 'luc
 import Link from 'next/link';
 
 export default function SolicitarPersonalPage() {
-  const { staffingRequests, addStaffingRequest } = useData();
+  const { staffingRequests, activeCategoryNames, addStaffingRequest } = useData();
 
   const handleAddRequest = async (newReq: Omit<StaffingRequest, 'id' | 'submittedAt' | 'status'>) => {
     await addStaffingRequest(newReq);
@@ -65,7 +65,7 @@ export default function SolicitarPersonalPage() {
           </div>
 
           {/* Detailed Request Form Component */}
-          <StaffingRequestForm onAddRequest={handleAddRequest} />
+          <StaffingRequestForm categories={activeCategoryNames} onAddRequest={handleAddRequest} />
 
           {/* Recent Submissions Track Record */}
           <div className="mt-12 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">

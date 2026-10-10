@@ -32,4 +32,17 @@ describe('VacancyList Component', () => {
 
     expect(screen.getByText('Analista Contable y de Planillas')).toBeDefined();
   });
+
+  it('renders the category filter from the categories prop', () => {
+    render(
+      <VacancyList
+        vacancies={INITIAL_VACANCIES}
+        categories={['Salud y Enfermería']}
+        onAddApplication={vi.fn()}
+      />
+    );
+
+    expect(screen.getByRole('option', { name: 'Salud y Enfermería' })).toBeDefined();
+    expect(screen.queryByRole('option', { name: 'Tecnología' })).toBeNull();
+  });
 });
