@@ -168,9 +168,12 @@ export default function AdminCandidatosPage() {
                     </div>
 
                     <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100 space-y-1">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Experiencia y Salario</span>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Experiencia, Salario y Disponibilidad</span>
                       <p className="font-semibold text-slate-800">{app.experienceYears} años de experiencia</p>
                       <p className="text-emerald-700 font-bold">Pretensión: ${app.expectedSalary} USD</p>
+                      <p className="text-slate-600">
+                        Disponibilidad: <strong className="text-slate-800">{app.availability ?? 'No indicada'}</strong>
+                      </p>
                     </div>
 
                     {/* Test Scores Display / Button */}

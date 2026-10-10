@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS public.candidate_applications (
   phone VARCHAR(50) NOT NULL,
   experience_years INTEGER DEFAULT 0,
   expected_salary NUMERIC(10, 2) NOT NULL,
+  availability VARCHAR(50),
   resume_notes TEXT,
   status VARCHAR(100) DEFAULT 'Solicitud Recibida',
   test_scores JSONB DEFAULT '{"technicalScore": 0, "psychometricScore": 0, "testNotes": ""}'::jsonb,

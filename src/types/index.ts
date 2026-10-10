@@ -56,6 +56,9 @@ export type PipelineStage =
   | 'Expediente Aprobado'
   | 'Contratación y Firma';
 
+export const AVAILABILITY_OPTIONS = ['Inmediata', '15 días', '1 mes', 'Más de 1 mes'] as const;
+export type Availability = (typeof AVAILABILITY_OPTIONS)[number];
+
 export interface CandidateApplication {
   id: string;
   trackingCode: string;
@@ -67,6 +70,8 @@ export interface CandidateApplication {
   location?: string;
   experienceYears: number;
   expectedSalary: number;
+  /** Disponibilidad para iniciar labores */
+  availability?: Availability;
   resumeUrl?: string;
   resumeFileName?: string;
   coverLetter?: string;

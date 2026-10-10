@@ -260,13 +260,14 @@ export const generateCandidatesReportPDF = (applications: CandidateApplication[]
     a.vacancyTitle,
     `${a.experienceYears} años`,
     `$${a.expectedSalary}`,
+    a.availability ?? '-',
     a.appliedAt,
     a.status,
   ]);
 
   autoTable(doc, {
     startY: 42,
-    head: [['Código', 'Candidato', 'Puesto a que Aplica', 'Experiencia', 'Aspiración', 'Fecha', 'Etapa Actual']],
+    head: [['Código', 'Candidato', 'Puesto a que Aplica', 'Experiencia', 'Aspiración', 'Disponibilidad', 'Fecha', 'Etapa Actual']],
     body: rows,
     headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold', fontSize: 9 },
     bodyStyles: { fontSize: 8, textColor: [51, 65, 85] },

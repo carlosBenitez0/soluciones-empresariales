@@ -115,6 +115,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
               phone: a.phone,
               experienceYears: a.experience_years,
               expectedSalary: Number(a.expected_salary),
+              availability: a.availability ?? undefined,
               appliedAt: a.applied_at ? new Date(a.applied_at).toISOString().split('T')[0] : '2026-10-06',
               status: a.status,
               testScores: a.test_scores,
@@ -398,6 +399,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
               phone: input.phone,
               experience_years: input.experienceYears,
               expected_salary: input.expectedSalary,
+              availability: input.availability ?? null,
               status: 'Solicitud Recibida',
             },
           ])

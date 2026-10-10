@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Vacancy, CandidateApplication } from '../../types';
+import { Vacancy, CandidateApplication, Availability, AVAILABILITY_OPTIONS } from '../../types';
 import { X, Briefcase, MapPin, DollarSign, CheckCircle2, Upload, Send, ArrowRight } from 'lucide-react';
 
 interface VacancyModalProps {
@@ -18,6 +18,7 @@ export const VacancyModal: React.FC<VacancyModalProps> = ({ vacancy, onClose, on
   const [location, setLocation] = useState('');
   const [experienceYears, setExperienceYears] = useState<number>(2);
   const [expectedSalary, setExpectedSalary] = useState<number>(600);
+  const [availability, setAvailability] = useState<Availability | ''>('');
   const [coverLetter, setCoverLetter] = useState('');
   const [fileName, setFileName] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -33,7 +34,7 @@ export const VacancyModal: React.FC<VacancyModalProps> = ({ vacancy, onClose, on
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName || !email || !phone) return;
+    if (!fullName || !email || !phone || !availability) return;
 
     const trackingCode = `APP-${Math.floor(1000 + Math.random() * 9000)}`;
     setGeneratedCode(trackingCode);
@@ -48,6 +49,7 @@ export const VacancyModal: React.FC<VacancyModalProps> = ({ vacancy, onClose, on
       location: location || 'El Salvador',
       experienceYears: Number(experienceYears),
       expectedSalary: Number(expectedSalary),
+      availability,
       resumeFileName: fileName || 'curriculum_vitae.pdf',
       coverLetter,
     });
@@ -220,6 +222,26 @@ export const VacancyModal: React.FC<VacancyModalProps> = ({ vacancy, onClose, on
                         className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 focus:outline-none focus:border-blue-700 text-sm shadow-xs"
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="availability" className="block text-xs font-bold text-slate-700 mb-1">
+                      Disponibilidad para Iniciar *
+                    </label>
+                    <select
+                      id="availability"
+                      required
+                      value={availability}
+                      onChange={(e) => setAvailability(e.target.value as Availability)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 focus:outline-none focus:border-blue-700 text-sm shadow-xs"
+                    >
+                      <option value="" disabled>Seleccione cuándo podría empezar</option>
+                      {AVAILABILITY_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt === 'Inmediata' ? 'Inmediata' : `En ${opt}`}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   {/* Resume Upload Simulation */}

@@ -53,3 +53,6 @@ CREATE POLICY "Permitir lectura empresas" ON public.client_companies FOR SELECT 
 CREATE POLICY "Permitir registro empresas" ON public.client_companies FOR INSERT WITH CHECK (status = 'Pendiente' AND access_code IS NULL);
 CREATE POLICY "Permitir edicion empresas" ON public.client_companies FOR UPDATE USING (true);
 CREATE POLICY "Permitir borrado empresas" ON public.client_companies FOR DELETE USING (true);
+
+-- 3. DISPONIBILIDAD DEL POSTULANTE
+ALTER TABLE public.candidate_applications ADD COLUMN IF NOT EXISTS availability VARCHAR(50);

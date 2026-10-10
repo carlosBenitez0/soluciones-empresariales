@@ -263,6 +263,7 @@ export const INITIAL_CANDIDATE_APPLICATIONS: CandidateApplication[] = [
     location: 'Chalatenango Sur',
     experienceYears: 3,
     expectedSalary: 750,
+    availability: '15 días',
     appliedAt: '2026-10-03',
     status: 'Pruebas Técnicas y Psicométricas',
     testScores: {
