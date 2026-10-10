@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { StaffingRequest, RequestType, JobCategory } from '../../types';
 import { DEFAULT_CATEGORY_NAMES } from '../../data/mockData';
+import { generateCode } from '../../lib/codes';
 import { Building2, CheckCircle2, ArrowRight } from 'lucide-react';
 
 interface StaffingRequestFormProps {
@@ -30,7 +31,7 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
     e.preventDefault();
     if (!companyName || !contactName || !email || !phone || !positionTitle) return;
 
-    const trackingCode = `REQ-${Math.floor(1000 + Math.random() * 9000)}`;
+    const trackingCode = generateCode('REQ');
     setGeneratedCode(trackingCode);
 
     onAddRequest({

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Vacancy, CandidateApplication, Availability, AVAILABILITY_OPTIONS } from '../../types';
+import { generateCode } from '../../lib/codes';
 import { X, Briefcase, MapPin, DollarSign, CheckCircle2, Upload, Send, ArrowRight } from 'lucide-react';
 
 interface VacancyModalProps {
@@ -36,7 +37,7 @@ export const VacancyModal: React.FC<VacancyModalProps> = ({ vacancy, onClose, on
     e.preventDefault();
     if (!fullName || !email || !phone || !availability) return;
 
-    const trackingCode = `APP-${Math.floor(1000 + Math.random() * 9000)}`;
+    const trackingCode = generateCode('APP');
     setGeneratedCode(trackingCode);
 
     onSubmitApplication({

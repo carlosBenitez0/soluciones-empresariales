@@ -6,6 +6,12 @@ import { INITIAL_VACANCIES, INITIAL_STAFFING_REQUESTS, INITIAL_CANDIDATE_APPLICA
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { generateCode } from '../lib/codes';
 
+// The form that collects the data may already have shown a tracking code to the user; keep it if given.
+type NewStaffingRequest = Omit<StaffingRequest, 'id' | 'trackingCode' | 'submittedAt' | 'status'> & { trackingCode?: string };
+type NewCandidateApplication = Omit<CandidateApplication, 'id' | 'trackingCode' | 'appliedAt' | 'status'> & { trackingCode?: string };
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 interface DataContextType {
   vacancies: Vacancy[];
   staffingRequests: StaffingRequest[];
@@ -17,9 +23,9 @@ interface DataContextType {
   addVacancy: (vacancy: Omit<Vacancy, 'id' | 'postedAt'>) => Promise<Vacancy>;
   updateVacancy: (id: string, updates: Partial<Vacancy>) => Promise<void>;
   deleteVacancy: (id: string) => Promise<void>;
-  addStaffingRequest: (request: Omit<StaffingRequest, 'id' | 'trackingCode' | 'submittedAt' | 'status'>) => Promise<StaffingRequest>;
+  addStaffingRequest: (request: NewStaffingRequest) => Promise<StaffingRequest>;
   updateStaffingRequest: (id: string, updates: Partial<StaffingRequest>) => Promise<void>;
-  addCandidateApplication: (app: Omit<CandidateApplication, 'id' | 'trackingCode' | 'appliedAt' | 'status'>) => Promise<CandidateApplication>;
+  addCandidateApplication: (app: NewCandidateApplication) => Promise<CandidateApplication>;
   updateCandidateApplication: (id: string, updates: Partial<CandidateApplication>) => Promise<void>;
   addCategory: (name: string) => Promise<Category>;
   updateCategory: (id: string, updates: Partial<Omit<Category, 'id'>>) => Promise<void>;
@@ -109,6 +115,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const mappedApplications: CandidateApplication[] = appData.map((a) => ({
               id: a.id,
               trackingCode: a.tracking_code,
+              vacancyId: a.vacancy_id ?? undefined,
               vacancyTitle: a.vacancy_title,
               fullName: a.full_name,
               email: a.email,
@@ -307,10 +314,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // 4. Add Staffing Request
   const addStaffingRequest = async (
-    input: Omit<StaffingRequest, 'id' | 'trackingCode' | 'submittedAt' | 'status'>
+    input: NewStaffingRequest
   ): Promise<StaffingRequest> => {
     const today = new Date().toISOString().split('T')[0];
-    const trackingCode = `REQ-${Math.floor(1000 + Math.random() * 9000)}`;
+    const trackingCode = input.trackingCode ?? generateCode('REQ');
     const newRequest: StaffingRequest = {
       ...input,
       id: `req-${Date.now()}`,
@@ -374,10 +381,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // 6. Add Candidate Application
   const addCandidateApplication = async (
-    input: Omit<CandidateApplication, 'id' | 'trackingCode' | 'appliedAt' | 'status'>
+    input: NewCandidateApplication
   ): Promise<CandidateApplication> => {
     const today = new Date().toISOString().split('T')[0];
-    const trackingCode = `APP-${Math.floor(1000 + Math.random() * 9000)}`;
+    const trackingCode = input.trackingCode ?? generateCode('APP');
     const newApp: CandidateApplication = {
       ...input,
       id: `app-${Date.now()}`,
@@ -393,6 +400,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           .insert([
             {
               tracking_code: trackingCode,
+              // Demo vacancies use ids like "vac-1"; only real rows can be referenced
+              vacancy_id: input.vacancyId && UUID_PATTERN.test(input.vacancyId) ? input.vacancyId : null,
               vacancy_title: input.vacancyTitle,
               full_name: input.fullName,
               email: input.email,
