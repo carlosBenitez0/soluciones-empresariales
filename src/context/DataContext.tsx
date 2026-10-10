@@ -10,6 +10,19 @@ import { generateCode } from '../lib/codes';
 type NewStaffingRequest = Omit<StaffingRequest, 'id' | 'trackingCode' | 'submittedAt' | 'status'> & { trackingCode?: string };
 type NewCandidateApplication = Omit<CandidateApplication, 'id' | 'trackingCode' | 'appliedAt' | 'status'> & { trackingCode?: string };
 
+// Fire-and-forget call to an email Route Handler; email failures must never block the UI flow.
+const notify = (path: string, payload: Record<string, unknown>) => {
+  try {
+    fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch((err) => console.warn(`Notification ${path} failed:`, err));
+  } catch (err) {
+    console.warn(`Notification ${path} failed:`, err);
+  }
+};
+
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface DataContextType {
@@ -425,6 +438,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const updated = [newApp, ...candidateApplications];
     saveAppsLocal(updated);
+
+    notify('/api/notify/application', {
+      trackingCode: newApp.trackingCode,
+      email: newApp.email,
+      fullName: newApp.fullName,
+      vacancyTitle: newApp.vacancyTitle,
+    });
     return newApp;
   };
 
@@ -587,6 +607,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!company) return undefined;
     const accessCode = company.accessCode ?? generateCode('EMP');
     await updateClientCompany(id, { status: 'Aprobada', accessCode });
+
+    notify('/api/notify/company-approved', {
+      companyId: id,
+      email: company.email,
+      companyName: company.name,
+      contactName: company.contactName,
+      accessCode,
+    });
     return { ...company, status: 'Aprobada', accessCode };
   };
 

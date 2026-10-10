@@ -91,7 +91,9 @@ export const VacancyModal: React.FC<VacancyModalProps> = ({ vacancy, onClose, on
               <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 max-w-md mx-auto text-center space-y-1">
                 <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Tu Código de Rastreo Guardado</span>
                 <span className="text-2xl font-black text-blue-700 block tracking-widest">{generatedCode}</span>
-                <p className="text-xs text-slate-600">Guarda este código para consultar el avance de tu reclutamiento.</p>
+                <p className="text-xs text-slate-600">
+                  También lo enviamos a <strong>{email}</strong>. Úsalo para consultar el avance de tu proceso.
+                </p>
               </div>
 
               <p className="text-slate-600 max-w-md mx-auto text-xs leading-relaxed">
