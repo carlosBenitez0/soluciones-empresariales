@@ -115,7 +115,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-slate-800 mt-12 pt-6 text-center text-xs text-slate-500">
-          <p>© 2026 Soluciones Empresariales. Todos los derechos reservados. Proyecto de Inversión y Staffing.</p>
+          <p>© 2026 Soluciones Empresariales. Todos los derechos reservados. Staffing.</p>
         </div>
       </div>
     </footer>
