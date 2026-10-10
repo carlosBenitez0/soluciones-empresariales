@@ -210,18 +210,6 @@ export const COMPETITOR_COMPARISON: CompetitorComparison[] = [
     vinculosEstrategicos: 'Media / Saturado',
     latinTopJobs: 'Media / Alta carga',
     solucionesEmpresariales: 'Alta prioridad y dedicación exclusiva',
-  },
-  {
-    attribute: 'Atención personalizada',
-    vinculosEstrategicos: '3 / 5',
-    latinTopJobs: '4 / 5',
-    solucionesEmpresariales: '5 / 5 (Acompañamiento 1 a 1)',
-  },
-  {
-    attribute: 'Flexibilidad en servicios',
-    vinculosEstrategicos: '4 / 5',
-    latinTopJobs: '5 / 5',
-    solucionesEmpresariales: '5 / 5 (Staffing adaptado al cliente)',
   }
 ];
 
