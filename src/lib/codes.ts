@@ -16,3 +16,6 @@ export const normalizeCode = (code: string): string => code.trim().toUpperCase()
 
 /** Applicant (APP-) or company staffing request (REQ-) tracking code. */
 export const TRACKING_CODE_PATTERN = /^(APP|REQ)-[A-Z0-9]{4,10}$/;
+
+/** Client company access code for the Portal de Empresas. */
+export const ACCESS_CODE_PATTERN = /^EMP-[A-Z0-9]{4,10}$/;

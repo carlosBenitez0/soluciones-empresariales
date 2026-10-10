@@ -27,6 +27,7 @@ export const Navbar: React.FC = () => {
     { name: 'Bolsa de Trabajo', href: '/vacantes' },
     { name: 'Por Qué Elegirnos', href: '/competitividad' },
     { name: 'Consultar Estado', href: '/seguimiento', icon: Search },
+    { name: 'Portal Empresas', href: '/portal-empresa', icon: Building2 },
     { name: 'Gestión RRHH', href: '/gestion-rrhh', icon: FileText },
   ];
 

@@ -87,6 +87,13 @@ export default function RegistroEmpresaPage() {
                   );
                 })}
               </ol>
+
+              <p className="text-xs text-slate-500">
+                ¿Ya tiene su código?{' '}
+                <Link href="/portal-empresa" className="font-bold text-blue-700 hover:text-blue-900 underline">
+                  Ingrese al Portal de Empresas
+                </Link>
+              </p>
             </div>
 
             {/* Form */}
