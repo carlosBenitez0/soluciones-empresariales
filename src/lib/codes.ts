@@ -13,3 +13,6 @@ export const generateCode = (prefix: string, length = 6): string => {
 };
 
 export const normalizeCode = (code: string): string => code.trim().toUpperCase();
+
+/** Applicant (APP-) or company staffing request (REQ-) tracking code. */
+export const TRACKING_CODE_PATTERN = /^(APP|REQ)-[A-Z0-9]{4,10}$/;

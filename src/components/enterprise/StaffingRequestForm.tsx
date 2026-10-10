@@ -100,7 +100,7 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
 
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
-                  href="/seguimiento"
+                  href={`/seguimiento/${generatedCode}`}
                   className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md flex items-center gap-2"
                 >
                   <span>Ir al Portal de Consulta de Estado</span>
