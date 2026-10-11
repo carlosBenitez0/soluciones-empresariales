@@ -21,18 +21,25 @@ import {
   ChevronRight,
   Tags,
   Building,
+  RotateCcw,
 } from 'lucide-react';
 
 export const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuth();
-  const { vacancies, staffingRequests, candidateApplications, clientCompanies } = useData();
+  const { vacancies, staffingRequests, candidateApplications, clientCompanies, resetDemoData } = useData();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const pendingCompaniesCount = clientCompanies.filter((c) => c.status === 'Pendiente').length;
   const pendingRequestsCount = staffingRequests.filter((r) => r.status.includes('Pendiente')).length;
   const activeApplicationsCount = candidateApplications.filter((a) => a.status !== 'Contratación y Firma').length;
+
+  const handleResetDemoData = () => {
+    if (confirm('¿Restablecer los datos de demostración? Se perderán los cambios hechos en este navegador.')) {
+      resetDemoData();
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -168,6 +175,17 @@ export const AdminSidebar: React.FC = () => {
 
       {/* Footer / Account Actions */}
       <div className="p-4 border-t border-slate-800 space-y-3 bg-slate-950/40">
+        {/* Demo mode only: data lives in this browser's localStorage */}
+        {!isSupabaseConfigured && (
+          <button
+            type="button"
+            onClick={handleResetDemoData}
+            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-slate-300 text-xs font-medium transition-colors"
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+            <span>Restablecer datos demo</span>
+          </button>
+        )}
         <Link
           href="/"
           target="_blank"
