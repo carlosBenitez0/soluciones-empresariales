@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { StaffingRequest, RequestType, JobCategory } from '../../types';
 import { DEFAULT_CATEGORY_NAMES } from '../../data/mockData';
 import { generateCode } from '../../lib/codes';
+import { scrollIntoViewTop } from '../../lib/scroll';
 import { Building2, CheckCircle2, ArrowRight } from 'lucide-react';
 
 interface StaffingRequestFormProps {
@@ -26,6 +27,12 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
   const [urgent, setUrgent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [generatedCode, setGeneratedCode] = useState('');
+  const formContainerRef = useRef<HTMLDivElement>(null);
+
+  // The success message is much shorter than the form: bring it into view after submitting
+  useEffect(() => {
+    if (submitted) scrollIntoViewTop(formContainerRef.current);
+  }, [submitted]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,7 +87,7 @@ export const StaffingRequestForm: React.FC<StaffingRequestFormProps> = ({ onAddR
         </div>
 
         {/* Form Container */}
-        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-md">
+        <div ref={formContainerRef} className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-md scroll-mt-28">
           {submitted ? (
             <div className="text-center py-8 space-y-4">
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto border border-emerald-300 shadow-xs">

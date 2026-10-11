@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { scrollToTop } from '../../lib/scroll';
 
 export const DEFAULT_PAGE_SIZE = 20;
 
@@ -55,6 +56,12 @@ export const Pagination: React.FC<PaginationProps> = ({ slice, onPageChange, lab
   const { page, totalPages, total, pageSize } = slice;
   if (total === 0) return null;
 
+  // A new page is a new view: start reading it from the top, not from the pagination bar
+  const goTo = (next: number) => {
+    onPageChange(next);
+    scrollToTop();
+  };
+
   const from = (page - 1) * pageSize + 1;
   const to = Math.min(page * pageSize, total);
   const buttonBase =
@@ -73,7 +80,7 @@ export const Pagination: React.FC<PaginationProps> = ({ slice, onPageChange, lab
         <div className="flex items-center gap-1">
           <button
             type="button"
-            onClick={() => onPageChange(page - 1)}
+            onClick={() => goTo(page - 1)}
             disabled={page === 1}
             aria-label="Página anterior"
             className={`${buttonBase} text-slate-700 hover:bg-slate-100`}
@@ -89,7 +96,7 @@ export const Pagination: React.FC<PaginationProps> = ({ slice, onPageChange, lab
               <button
                 key={p}
                 type="button"
-                onClick={() => onPageChange(p)}
+                onClick={() => goTo(p)}
                 aria-current={p === page ? 'page' : undefined}
                 className={`${buttonBase} ${p === page ? 'bg-blue-700 text-white' : 'text-slate-700 hover:bg-slate-100'}`}
               >
@@ -99,7 +106,7 @@ export const Pagination: React.FC<PaginationProps> = ({ slice, onPageChange, lab
           )}
           <button
             type="button"
-            onClick={() => onPageChange(page + 1)}
+            onClick={() => goTo(page + 1)}
             disabled={page === totalPages}
             aria-label="Página siguiente"
             className={`${buttonBase} text-slate-700 hover:bg-slate-100`}
