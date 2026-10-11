@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
+import { Pagination, paginate, usePageState } from '@/components/admin/Pagination';
 import { StaffingRequest, StaffingRequestStatus } from '@/types';
 import { Building2, Search, ArrowLeft, Clock, Sparkles, CheckCircle2, ArrowRight, ExternalLink, Plus } from 'lucide-react';
 import Link from 'next/link';
@@ -16,6 +17,8 @@ export default function AdminSolicitudesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<string>('Todos');
   const [convertingRequest, setConvertingRequest] = useState<StaffingRequest | null>(null);
+
+  const { page, setPage } = usePageState(`${searchTerm}|${selectedStatus}`);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -70,6 +73,8 @@ export default function AdminSolicitudesPage() {
     }
   };
 
+  const pageSlice = paginate(filteredRequests, page);
+
   return (
     <div className="space-y-6 pb-10">
       {/* Header Bar */}
@@ -119,7 +124,7 @@ export default function AdminSolicitudesPage() {
                 No se encontraron solicitudes registradas con los criterios seleccionados.
               </div>
             ) : (
-              filteredRequests.map((req) => (
+              pageSlice.pageItems.map((req) => (
                 <div key={req.id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4 hover:border-blue-300 transition-all">
                   
                   {/* Top Bar Info */}
@@ -197,6 +202,7 @@ export default function AdminSolicitudesPage() {
                 </div>
               ))
             )}
+            <Pagination slice={pageSlice} onPageChange={setPage} label="solicitudes" className="rounded-2xl border border-slate-200" />
           </div>
     </div>
   );

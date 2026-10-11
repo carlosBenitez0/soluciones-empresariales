@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
+import { Pagination, paginate, usePageState } from '@/components/admin/Pagination';
 import { ClientCompany, ClientCompanyStatus } from '@/types';
 import {
   Plus,
@@ -50,6 +51,8 @@ export default function AdminEmpresasPage() {
   const [contactName, setContactName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+
+  const { page, setPage } = usePageState(`${searchTerm}|${selectedStatus}`);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -143,6 +146,8 @@ export default function AdminEmpresasPage() {
     }
   };
 
+  const pageSlice = paginate(filteredCompanies, page);
+
   return (
     <>
       <div className="space-y-6 pb-10">
@@ -210,7 +215,7 @@ export default function AdminEmpresasPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredCompanies.map((company) => (
+                  pageSlice.pageItems.map((company) => (
                     <tr
                       key={company.id}
                       className={`hover:bg-slate-50/70 transition-colors ${company.status === 'Inactiva' ? 'opacity-60' : ''}`}
@@ -301,6 +306,7 @@ export default function AdminEmpresasPage() {
               </tbody>
             </table>
           </div>
+          <Pagination slice={pageSlice} onPageChange={setPage} label="empresas" />
         </div>
       </div>
 

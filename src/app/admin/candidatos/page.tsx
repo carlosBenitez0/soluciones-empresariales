@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
+import { Pagination, paginate, usePageState } from '@/components/admin/Pagination';
 import { CandidateApplication, PipelineStage } from '@/types';
 import { Users, Search, ArrowLeft, CheckCircle2, Clock, FileCheck, Edit3, X, Calculator, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
@@ -21,6 +22,8 @@ export default function AdminCandidatosPage() {
   const [techScore, setTechScore] = useState<number>(85);
   const [psychoScore, setPsychoScore] = useState<number>(90);
   const [evalNotes, setEvalNotes] = useState<string>('');
+
+  const { page, setPage } = usePageState(`${searchTerm}|${selectedStatus}`);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -75,6 +78,8 @@ export default function AdminCandidatosPage() {
     setEvaluatingCandidate(null);
   };
 
+  const pageSlice = paginate(filteredApplications, page);
+
   return (
     <>
       <div className="space-y-6 pb-10">
@@ -126,7 +131,7 @@ export default function AdminCandidatosPage() {
                 No se encontraron postulaciones registradas con los criterios seleccionados.
               </div>
             ) : (
-              filteredApplications.map((app) => (
+              pageSlice.pageItems.map((app) => (
                 <div key={app.id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4 hover:border-purple-300 transition-all">
                   
                   {/* Top Bar Info */}
@@ -205,6 +210,7 @@ export default function AdminCandidatosPage() {
                 </div>
               ))
             )}
+            <Pagination slice={pageSlice} onPageChange={setPage} label="postulaciones" className="rounded-2xl border border-slate-200" />
           </div>
         </div>
 

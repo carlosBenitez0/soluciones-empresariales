@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
+import { Pagination, paginate, usePageState } from '@/components/admin/Pagination';
 import { Vacancy, JobCategory, WorkMode, CONFIDENTIAL_COMPANY_NAME } from '@/types';
 import { Plus, Search, Edit2, Trash2, Sparkles, X, Briefcase, Power } from 'lucide-react';
 
@@ -33,6 +34,8 @@ export default function AdminVacantesPage() {
   const [responsibilitiesInput, setResponsibilitiesInput] = useState('');
   const [benefitsInput, setBenefitsInput] = useState('');
   const [isUrgent, setIsUrgent] = useState(false);
+
+  const { page, setPage } = usePageState(`${searchTerm}|${selectedCategory}|${selectedStatus}`);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -148,6 +151,8 @@ export default function AdminVacantesPage() {
     await updateVacancy(vac.id, { isActive: vac.isActive === false });
   };
 
+  const pageSlice = paginate(filteredVacancies, page);
+
   return (
     <>
       <div className="space-y-6 pb-10">
@@ -227,7 +232,7 @@ export default function AdminVacantesPage() {
                       </td>
                     </tr>
                   ) : (
-                    filteredVacancies.map((vac) => (
+                    pageSlice.pageItems.map((vac) => (
                       <tr
                         key={vac.id}
                         className={`hover:bg-slate-50/70 transition-colors ${vac.isActive === false ? 'opacity-60' : ''}`}
@@ -305,6 +310,7 @@ export default function AdminVacantesPage() {
                 </tbody>
               </table>
             </div>
+            <Pagination slice={pageSlice} onPageChange={setPage} label="vacantes" />
           </div>
         </div>
 
