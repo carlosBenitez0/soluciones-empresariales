@@ -1,17 +1,17 @@
-import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { DataProvider, useData } from '../context/DataContext';
+import { useData } from '../context/DataContext';
+import { useAppStore, STORE_KEY } from '../store/useAppStore';
+import { buildSeedState, SEED_VERSION } from '../data/seed';
 
-const wrapper = ({ children }: { children: React.ReactNode }) => <DataProvider>{children}</DataProvider>;
-
-describe('DataContext', () => {
+describe('useData (Zustand store)', () => {
   beforeEach(() => {
     localStorage.clear();
+    useAppStore.setState({ ...buildSeedState(), hasHydrated: true });
   });
 
   it('keeps the tracking code that was already shown to the applicant', async () => {
-    const { result } = renderHook(() => useData(), { wrapper });
+    const { result } = renderHook(() => useData());
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -32,7 +32,7 @@ describe('DataContext', () => {
   });
 
   it('generates a non-sequential code when none is given', async () => {
-    const { result } = renderHook(() => useData(), { wrapper });
+    const { result } = renderHook(() => useData());
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     let code = '';
@@ -52,7 +52,7 @@ describe('DataContext', () => {
   });
 
   it('approving a company generates its portal access code', async () => {
-    const { result } = renderHook(() => useData(), { wrapper });
+    const { result } = renderHook(() => useData());
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     let companyId = '';
@@ -74,5 +74,30 @@ describe('DataContext', () => {
 
     expect(result.current.clientCompanies[0].status).toBe('Aprobada');
     expect(result.current.clientCompanies[0].accessCode).toMatch(/^EMP-[A-Z2-9]{6}$/);
+  });
+
+  it('restores data persisted with the current seed version', async () => {
+    const saved = { ...buildSeedState(), categories: [{ id: 'cat-x', name: 'Persistida', isActive: true }] };
+    localStorage.setItem(STORE_KEY, JSON.stringify({ state: saved, version: SEED_VERSION }));
+
+    await useAppStore.persist.rehydrate();
+
+    expect(useAppStore.getState().categories).toEqual([{ id: 'cat-x', name: 'Persistida', isActive: true }]);
+    expect(useAppStore.getState().hasHydrated).toBe(true);
+  });
+
+  it('replaces data saved with an older seed version by the current seed', async () => {
+    const old = { ...buildSeedState(), vacancies: [] };
+    localStorage.setItem(STORE_KEY, JSON.stringify({ state: old, version: SEED_VERSION - 1 }));
+
+    await useAppStore.persist.rehydrate();
+
+    expect(useAppStore.getState().vacancies).toEqual(buildSeedState().vacancies);
+  });
+
+  it('resetDemoData restores the seed', () => {
+    useAppStore.setState({ vacancies: [] });
+    useAppStore.getState().resetDemoData();
+    expect(useAppStore.getState().vacancies).toEqual(buildSeedState().vacancies);
   });
 });
