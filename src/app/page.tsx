@@ -12,7 +12,7 @@ import { useData } from '@/context/DataContext';
 import { StaffingRequest, CandidateApplication } from '@/types';
 
 export default function Home() {
-  const { vacancies, staffingRequests, candidateApplications, activeCategoryNames, addCandidateApplication, addStaffingRequest } = useData();
+  const { vacancies, activeCategoryNames, addCandidateApplication, addStaffingRequest } = useData();
   const activeVacancies = vacancies.filter((v) => v.isActive !== false);
 
   const handleAddApplication = async (newApp: Omit<CandidateApplication, 'id' | 'appliedAt' | 'status'>) => {
@@ -40,7 +40,7 @@ export default function Home() {
           <StaffingRequestForm categories={activeCategoryNames} onAddRequest={handleAddRequest} />
         </div>
 
-        <HRDashboard applications={candidateApplications} requests={staffingRequests} />
+        <HRDashboard />
       </main>
 
       {/* Corporate Footer */}

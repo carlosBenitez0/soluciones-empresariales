@@ -4,13 +4,10 @@ import React, { useState } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { HRDashboard } from '@/components/dashboard/HRDashboard';
-import { useData } from '@/context/DataContext';
 import { ArrowLeft, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 export default function GestionRRHHPage() {
-  const { candidateApplications, staffingRequests } = useData();
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
       <Navbar />
@@ -42,7 +39,7 @@ export default function GestionRRHHPage() {
             </div>
           </div>
 
-          <HRDashboard applications={candidateApplications} requests={staffingRequests} />
+          <HRDashboard />
 
         </div>
       </main>
