@@ -25,7 +25,7 @@ export const CompetitorMatrix: React.FC = () => {
         </div>
 
         {/* Mobile Tabbed Switcher View (Visible on Small Screens) */}
-        <div className="block md:hidden mb-8">
+        <div className="block lg:hidden mb-8">
           
           {/* Tab Selector Buttons */}
           <div className="bg-slate-100 p-1 rounded-xl flex gap-1 mb-4 border border-slate-200">
@@ -101,7 +101,7 @@ export const CompetitorMatrix: React.FC = () => {
         </div>
 
         {/* Desktop Table View (Visible on Medium & Larger Screens) */}
-        <div className="hidden md:block bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-md">
+        <div className="hidden lg:block bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-md">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
