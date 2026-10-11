@@ -94,6 +94,17 @@ export type StaffingRequestStatus =
   | 'Completado'
   | 'Cancelada';
 
+/** Statuses offered in the admin, in process order. ('Completado' is a legacy duplicate of 'Completada'.) */
+export const STAFFING_REQUEST_STATUSES: StaffingRequestStatus[] = [
+  'Pendiente (1-2 días)',
+  'En Evaluación de Salario',
+  'En Revisión',
+  'Búsqueda de Candidatos',
+  'Candidatos Presentados',
+  'Completada',
+  'Cancelada',
+];
+
 export interface StaffingRequest {
   id: string;
   trackingCode: string;
