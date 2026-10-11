@@ -153,6 +153,68 @@ export default function AdminVacantesPage() {
 
   const pageSlice = paginate(filteredVacancies, page);
 
+  const statusToggle = (vac: Vacancy) => (
+    <button
+      onClick={() => toggleActive(vac)}
+      title={vac.isActive === false ? 'Activar vacante' : 'Desactivar vacante'}
+      className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors inline-flex items-center gap-1 whitespace-nowrap ${
+        vac.isActive === false
+          ? 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+          : 'bg-emerald-100 text-emerald-900 border-emerald-300'
+      }`}
+    >
+      <Power className={`w-3 h-3 ${vac.isActive === false ? 'text-slate-400' : 'text-emerald-700'}`} />
+      <span>{vac.isActive === false ? 'Inactiva' : 'Activa'}</span>
+    </button>
+  );
+
+  const urgencyToggle = (vac: Vacancy) => (
+    <button
+      onClick={() => toggleUrgent(vac)}
+      title={vac.isUrgent ? 'Quitar urgencia' : 'Marcar como urgente'}
+      className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors inline-flex items-center gap-1 whitespace-nowrap ${
+        vac.isUrgent
+          ? 'bg-amber-100 text-amber-900 border-amber-300'
+          : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+      }`}
+    >
+      <Sparkles className={`w-3 h-3 ${vac.isUrgent ? 'text-amber-700' : 'text-slate-400'}`} />
+      <span>{vac.isUrgent ? 'Urgente' : 'Normal'}</span>
+    </button>
+  );
+
+  const rowActions = (vac: Vacancy) => (
+    <div className="flex items-center justify-end gap-2">
+      <button
+        onClick={() => openEditModal(vac)}
+        className="p-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+        title="Editar Vacante"
+        aria-label={`Editar ${vac.title}`}
+      >
+        <Edit2 className="w-3.5 h-3.5" />
+      </button>
+      <button
+        onClick={() => handleDelete(vac.id, vac.title)}
+        className="p-2 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+        title="Eliminar Vacante"
+        aria-label={`Eliminar ${vac.title}`}
+      >
+        <Trash2 className="w-3.5 h-3.5" />
+      </button>
+    </div>
+  );
+
+  const companyCell = (vac: Vacancy) => (
+    <span className="font-semibold text-slate-800 block">
+      {companyName(vac)}
+      {vac.isConfidential && vac.companyId && (
+        <span className="ml-1.5 text-[9px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-600 font-bold uppercase whitespace-nowrap">
+          Confidencial
+        </span>
+      )}
+    </span>
+  );
+
   return (
     <>
       <div className="space-y-6 pb-10">
@@ -187,11 +249,12 @@ export default function AdminVacantesPage() {
               />
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="grid grid-cols-2 gap-2 md:flex md:items-center">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="py-2 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:outline-none"
+                aria-label="Filtrar por categoría"
+                className="w-full md:w-auto min-w-0 py-2 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:outline-none"
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
@@ -200,7 +263,8 @@ export default function AdminVacantesPage() {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value as 'Todas' | 'Activas' | 'Inactivas')}
-                className="py-2 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:outline-none"
+                aria-label="Filtrar por estado"
+                className="w-full md:w-auto min-w-0 py-2 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold focus:outline-none"
               >
                 <option value="Todas">Todos los estados</option>
                 <option value="Activas">Activas</option>
@@ -209,107 +273,87 @@ export default function AdminVacantesPage() {
             </div>
           </div>
 
-          {/* Vacancies Table */}
+          {/* Vacancies: table from xl (enough room for 7 columns next to the sidebar), cards below */}
           <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 text-[11px] uppercase tracking-wider text-slate-600 border-b border-slate-200">
-                    <th className="py-3.5 px-4 font-bold">Título de la Plaza</th>
-                    <th className="py-3.5 px-4 font-bold">Categoría & Modalidad</th>
-                    <th className="py-3.5 px-4 font-bold">Empresa / Ubicación</th>
-                    <th className="py-3.5 px-4 font-bold">Salario ($ USD)</th>
-                    <th className="py-3.5 px-4 font-bold">Estado</th>
-                    <th className="py-3.5 px-4 font-bold">Urgencia</th>
-                    <th className="py-3.5 px-4 font-bold text-right">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-xs">
-                  {filteredVacancies.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-500 font-medium">
-                        No se encontraron vacantes registradas.
-                      </td>
-                    </tr>
-                  ) : (
-                    pageSlice.pageItems.map((vac) => (
-                      <tr
-                        key={vac.id}
-                        className={`hover:bg-slate-50/70 transition-colors ${vac.isActive === false ? 'opacity-60' : ''}`}
-                      >
-                        <td className="py-3.5 px-4">
-                          <span className="font-extrabold text-slate-900 block">{vac.title}</span>
-                          <span className="text-[10px] text-slate-400">Publicado: {vac.postedAt}</span>
-                        </td>
-                        <td className="py-3.5 px-4 space-y-0.5">
-                          <span className="font-bold text-blue-700 block">{vac.category}</span>
-                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-semibold inline-block">
-                            {vac.workMode}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="font-semibold text-slate-800 block">
-                            {companyName(vac)}
-                            {vac.isConfidential && vac.companyId && (
-                              <span className="ml-1.5 text-[9px] px-1.5 py-0.5 rounded bg-slate-200 text-slate-600 font-bold uppercase">
-                                Confidencial
-                              </span>
-                            )}
-                          </span>
-                          <span className="text-slate-500 text-[11px]">{vac.location}</span>
-                        </td>
-                        <td className="py-3.5 px-4 font-bold text-slate-900">
-                          {vac.salaryRange}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <button
-                            onClick={() => toggleActive(vac)}
-                            title={vac.isActive === false ? 'Activar vacante' : 'Desactivar vacante'}
-                            className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors flex items-center gap-1 ${
-                              vac.isActive === false
-                                ? 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
-                                : 'bg-emerald-100 text-emerald-900 border-emerald-300'
-                            }`}
-                          >
-                            <Power className={`w-3 h-3 ${vac.isActive === false ? 'text-slate-400' : 'text-emerald-700'}`} />
-                            <span>{vac.isActive === false ? 'Inactiva' : 'Activa'}</span>
-                          </button>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <button
-                            onClick={() => toggleUrgent(vac)}
-                            className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors flex items-center gap-1 ${
-                              vac.isUrgent
-                                ? 'bg-amber-100 text-amber-900 border-amber-300'
-                                : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
-                            }`}
-                          >
-                            <Sparkles className={`w-3 h-3 ${vac.isUrgent ? 'text-amber-700' : 'text-slate-400'}`} />
-                            <span>{vac.isUrgent ? 'Urgente' : 'Normal'}</span>
-                          </button>
-                        </td>
-                        <td className="py-3.5 px-4 text-right space-x-2">
-                          <button
-                            onClick={() => openEditModal(vac)}
-                            className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
-                            title="Editar Vacante"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(vac.id, vac.title)}
-                            className="p-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
-                            title="Eliminar Vacante"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </td>
+            {filteredVacancies.length === 0 ? (
+              <p className="py-8 text-center text-xs text-slate-500 font-medium">No se encontraron vacantes registradas.</p>
+            ) : (
+              <>
+                <div className="hidden xl:block overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-slate-100 text-[11px] uppercase tracking-wider text-slate-600 border-b border-slate-200">
+                        <th className="py-3.5 px-4 font-bold">Título de la Plaza</th>
+                        <th className="py-3.5 px-4 font-bold">Categoría &amp; Modalidad</th>
+                        <th className="py-3.5 px-4 font-bold">Empresa / Ubicación</th>
+                        <th className="py-3.5 px-3 font-bold whitespace-nowrap">Salario ($ USD)</th>
+                        <th className="py-3.5 px-3 font-bold">Estado / Urgencia</th>
+                        <th className="py-3.5 px-3 font-bold text-right">Acciones</th>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-xs">
+                      {pageSlice.pageItems.map((vac) => (
+                        <tr
+                          key={vac.id}
+                          className={`hover:bg-slate-50/70 transition-colors ${vac.isActive === false ? 'opacity-60' : ''}`}
+                        >
+                          <td className="py-3.5 px-4">
+                            <span className="font-extrabold text-slate-900 block">{vac.title}</span>
+                            <span className="text-[10px] text-slate-400 whitespace-nowrap">Publicado: {vac.postedAt}</span>
+                          </td>
+                          <td className="py-3.5 px-3 space-y-0.5">
+                            <span className="font-bold text-blue-700 block">{vac.category}</span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-semibold inline-block">
+                              {vac.workMode}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-3">
+                            {companyCell(vac)}
+                            <span className="text-slate-500 text-[11px]">{vac.location}</span>
+                          </td>
+                          {/* Wide enough for "$800 - $1,100 USD" on one line; free-text salaries may wrap */}
+                          <td className="py-3.5 px-3 font-bold text-slate-900 min-w-34">{vac.salaryRange}</td>
+                          <td className="py-3.5 px-3">
+                            <div className="flex flex-col items-start gap-1.5">
+                              {statusToggle(vac)}
+                              {urgencyToggle(vac)}
+                            </div>
+                          </td>
+                          <td className="py-3.5 px-3 pr-4">{rowActions(vac)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <ul className="xl:hidden grid grid-cols-1 md:grid-cols-2 gap-px bg-slate-100">
+                  {pageSlice.pageItems.map((vac) => (
+                    <li key={vac.id} className={`bg-white p-4 space-y-3 ${vac.isActive === false ? 'opacity-60' : ''}`}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <h3 className="text-sm font-extrabold text-slate-900">{vac.title}</h3>
+                          <p className="text-[11px] text-slate-500">
+                            <span className="font-bold text-blue-700">{vac.category}</span> · {vac.workMode} · Publicado: {vac.postedAt}
+                          </p>
+                        </div>
+                        {rowActions(vac)}
+                      </div>
+                      <div className="text-xs">
+                        {companyCell(vac)}
+                        <span className="text-slate-500 text-[11px]">{vac.location}</span>
+                      </div>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-xs font-bold text-slate-900 whitespace-nowrap">{vac.salaryRange}</span>
+                        <div className="flex items-center gap-2">
+                          {statusToggle(vac)}
+                          {urgencyToggle(vac)}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
             <Pagination slice={pageSlice} onPageChange={setPage} label="vacantes" />
           </div>
         </div>
