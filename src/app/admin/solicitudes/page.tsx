@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
-import { StaffingRequest, StaffingRequestStatus } from '@/types';
+import { Pagination, paginate, usePageState } from '@/components/admin/Pagination';
+import { StaffingRequest, StaffingRequestStatus, STAFFING_REQUEST_STATUSES } from '@/types';
 import { Building2, Search, ArrowLeft, Clock, Sparkles, CheckCircle2, ArrowRight, ExternalLink, Plus } from 'lucide-react';
 import Link from 'next/link';
 
@@ -17,6 +18,8 @@ export default function AdminSolicitudesPage() {
   const [selectedStatus, setSelectedStatus] = useState<string>('Todos');
   const [convertingRequest, setConvertingRequest] = useState<StaffingRequest | null>(null);
 
+  const { page, setPage } = usePageState(`${searchTerm}|${selectedStatus}`);
+
   useEffect(() => {
     if (!isAdmin) {
       router.push('/admin/login');
@@ -25,14 +28,7 @@ export default function AdminSolicitudesPage() {
 
   if (!isAdmin) return null;
 
-  const statuses = [
-    'Todos',
-    'Pendiente (1-2 días)',
-    'En Revisión',
-    'Candidatos Presentados',
-    'Completada',
-    'Cancelada',
-  ];
+  const statuses = ['Todos', ...STAFFING_REQUEST_STATUSES];
 
   const filteredRequests = staffingRequests.filter((req) => {
     const matchesSearch = req.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -69,6 +65,8 @@ export default function AdminSolicitudesPage() {
       router.push('/admin/vacantes');
     }
   };
+
+  const pageSlice = paginate(filteredRequests, page);
 
   return (
     <div className="space-y-6 pb-10">
@@ -119,7 +117,7 @@ export default function AdminSolicitudesPage() {
                 No se encontraron solicitudes registradas con los criterios seleccionados.
               </div>
             ) : (
-              filteredRequests.map((req) => (
+              pageSlice.pageItems.map((req) => (
                 <div key={req.id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4 hover:border-blue-300 transition-all">
                   
                   {/* Top Bar Info */}
@@ -152,11 +150,13 @@ export default function AdminSolicitudesPage() {
                         onChange={(e) => handleStatusChange(req.id, e.target.value)}
                         className="py-1.5 px-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-xs font-extrabold focus:outline-none cursor-pointer"
                       >
-                        <option value="Pendiente (1-2 días)">Pendiente (1-2 días)</option>
-                        <option value="En Revisión">En Revisión</option>
-                        <option value="Candidatos Presentados">Candidatos Presentados</option>
-                        <option value="Completada">Completada</option>
-                        <option value="Cancelada">Cancelada</option>
+                        {STAFFING_REQUEST_STATUSES.map((st) => (
+                          <option key={st} value={st}>{st}</option>
+                        ))}
+                        {/* Without its own option, a status missing from the list would show as the first one */}
+                        {!STAFFING_REQUEST_STATUSES.includes(req.status) && (
+                          <option value={req.status}>{req.status}</option>
+                        )}
                       </select>
                     </div>
                   </div>
@@ -197,6 +197,7 @@ export default function AdminSolicitudesPage() {
                 </div>
               ))
             )}
+            <Pagination slice={pageSlice} onPageChange={setPage} label="solicitudes" className="rounded-2xl border border-slate-200" />
           </div>
     </div>
   );

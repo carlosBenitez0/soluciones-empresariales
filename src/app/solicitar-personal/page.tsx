@@ -6,11 +6,11 @@ import { Footer } from '@/components/layout/Footer';
 import { StaffingRequestForm } from '@/components/enterprise/StaffingRequestForm';
 import { useData } from '@/context/DataContext';
 import { StaffingRequest } from '@/types';
-import { Building2, Clock, ShieldCheck, Zap, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Clock, ShieldCheck, Zap, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SolicitarPersonalPage() {
-  const { staffingRequests, addStaffingRequest } = useData();
+  const { activeCategoryNames, addStaffingRequest } = useData();
 
   const handleAddRequest = async (newReq: Omit<StaffingRequest, 'id' | 'submittedAt' | 'status'>) => {
     await addStaffingRequest(newReq);
@@ -64,39 +64,21 @@ export default function SolicitarPersonalPage() {
             </div>
           </div>
 
-          {/* Detailed Request Form Component */}
-          <StaffingRequestForm onAddRequest={handleAddRequest} />
-
-          {/* Recent Submissions Track Record */}
-          <div className="mt-12 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 className="text-xl font-extrabold text-slate-900 mb-4 flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-blue-700" />
-              Solicitudes Recientes en Gestión
-            </h3>
-            <div className="divide-y divide-slate-100">
-              {staffingRequests.map((req) => (
-                <div key={req.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-extrabold text-slate-900 text-base">{req.positionTitle}</span>
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
-                        {req.requestType}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 mt-1 font-medium">
-                      {req.companyName} • Solicitado por: {req.contactName} ({req.numberOfPositions} plazas)
-                    </p>
-                  </div>
-                  <div>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      {req.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="mb-8 p-5 rounded-2xl bg-white border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <p className="text-sm text-slate-700">
+              <strong className="text-slate-900">¿Trabajará con nosotros de forma continua?</strong> Registre su empresa para recibir un código de acceso y seguir el avance de sus plazas.
+            </p>
+            <Link
+              href="/registro-empresa"
+              className="shrink-0 px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md text-center"
+            >
+              Registrar mi Empresa
+            </Link>
           </div>
+
+          {/* Detailed Request Form Component */}
+          <StaffingRequestForm categories={activeCategoryNames} onAddRequest={handleAddRequest} />
+
 
         </div>
       </main>

@@ -3,20 +3,29 @@
 import React, { useState } from 'react';
 import { Vacancy, CandidateApplication } from '../../types';
 import { VacancyModal } from './VacancyModal';
+import { DEFAULT_CATEGORY_NAMES } from '../../data/mockData';
+
+/** Vacancies shown per batch: 9 full rows in the 3-column desktop grid. */
+export const VACANCIES_BATCH_SIZE = 27;
 import { Search, Filter, Briefcase, MapPin, DollarSign, ArrowRight, Sparkles } from 'lucide-react';
 
 interface VacancyListProps {
   vacancies: Vacancy[];
   onAddApplication: (app: Omit<CandidateApplication, 'id' | 'appliedAt' | 'status'>) => void;
+  categories?: string[];
 }
 
-export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onAddApplication }) => {
+export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onAddApplication, categories = DEFAULT_CATEGORY_NAMES }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
   const [selectedWorkMode, setSelectedWorkMode] = useState<string>('Todos');
   const [selectedVacancy, setSelectedVacancy] = useState<Vacancy | null>(null);
 
-  const categories = ['Todas', 'Finanzas y Contabilidad', 'Operaciones y Logística', 'Ventas y Atención al Cliente', 'Administración', 'Tecnología'];
+  // How many vacancies are visible; goes back to the first batch whenever the filters change
+  const filtersKey = `${searchTerm}|${selectedCategory}|${selectedWorkMode}`;
+  const [visible, setVisible] = useState({ count: VACANCIES_BATCH_SIZE, key: filtersKey });
+  const visibleCount = visible.key === filtersKey ? visible.count : VACANCIES_BATCH_SIZE;
+
   const workModes = ['Todos', 'Presencial', 'Híbrido', 'Remoto'];
 
   const filteredVacancies = vacancies.filter((vac) => {
@@ -72,7 +81,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onAddApplic
                 className="w-full lg:w-auto pl-10 pr-8 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-800 text-sm focus:outline-none focus:border-blue-600 shadow-xs font-semibold appearance-none cursor-pointer"
               >
                 <option value="Todas">Todas las áreas</option>
-                {categories.filter(c => c !== 'Todas').map((cat) => (
+                {categories.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
@@ -120,60 +129,78 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies, onAddApplic
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredVacancies.map((vacancy) => (
-              <div
-                key={vacancy.id}
-                className="bg-white p-6 rounded-2xl border border-slate-200 flex flex-col justify-between relative group hover:shadow-md transition-all hover:border-blue-300"
-              >
-                {vacancy.isUrgent && (
-                  <span className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold uppercase tracking-wider flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-amber-700" />
-                    Urgente
-                  </span>
-                )}
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredVacancies.slice(0, visibleCount).map((vacancy) => (
+                <div
+                  key={vacancy.id}
+                  className="bg-white p-6 rounded-2xl border border-slate-200 flex flex-col justify-between relative group hover:shadow-md transition-all hover:border-blue-300"
+                >
+                  {vacancy.isUrgent && (
+                    <span className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold uppercase tracking-wider flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-amber-700" />
+                      Urgente
+                    </span>
+                  )}
 
-                <div>
-                  <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">
-                    {vacancy.category}
-                  </span>
-                  <h3 className="text-xl font-extrabold text-slate-900 mt-1 group-hover:text-blue-700 transition-colors">
-                    {vacancy.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 font-medium mt-1">{vacancy.company}</p>
+                  <div>
+                    <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">
+                      {vacancy.category}
+                    </span>
+                    <h3 className="text-xl font-extrabold text-slate-900 mt-1 group-hover:text-blue-700 transition-colors">
+                      {vacancy.title}
+                    </h3>
+                    <p className="text-xs text-slate-500 font-medium mt-1">{vacancy.company}</p>
 
-                  <p className="text-slate-600 text-xs leading-relaxed mt-3 line-clamp-3">
-                    {vacancy.description}
-                  </p>
+                    <p className="text-slate-600 text-xs leading-relaxed mt-3 line-clamp-3">
+                      {vacancy.description}
+                    </p>
 
-                  <div className="space-y-2 mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 font-medium">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-blue-600" />
-                      <span>{vacancy.location}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Briefcase className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Modalidad: {vacancy.workMode}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="w-3.5 h-3.5 text-amber-600" />
-                      <span className="font-extrabold text-slate-900">{vacancy.salaryRange}</span>
+                    <div className="space-y-2 mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 font-medium">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                        <span>{vacancy.location}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Modalidad: {vacancy.workMode}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="w-3.5 h-3.5 text-amber-600" />
+                        <span className="font-extrabold text-slate-900">{vacancy.salaryRange}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="pt-6">
-                  <button
-                    onClick={() => setSelectedVacancy(vacancy)}
-                    className="w-full py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-xs"
-                  >
-                    <span>Postularme a esta Plaza</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="pt-6">
+                    <button
+                      onClick={() => setSelectedVacancy(vacancy)}
+                      className="w-full py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-xs"
+                    >
+                      <span>Postularme a esta Plaza</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            {/* Progressive loading */}
+            <div className="mt-10 flex flex-col items-center gap-3">
+              <p className="text-xs text-slate-500 font-medium" aria-live="polite">
+                Mostrando {Math.min(visibleCount, filteredVacancies.length)} de {filteredVacancies.length} vacantes
+              </p>
+              {visibleCount < filteredVacancies.length && (
+                <button
+                  type="button"
+                  onClick={() => setVisible({ count: visibleCount + VACANCIES_BATCH_SIZE, key: filtersKey })}
+                  className="px-6 py-3 rounded-xl bg-white border border-blue-300 text-blue-800 hover:bg-blue-50 font-bold text-sm shadow-xs transition-colors"
+                >
+                  Cargar más vacantes
+                </button>
+              )}
+            </div>
+          </>
         )}
 
       </div>

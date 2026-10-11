@@ -10,7 +10,7 @@ import { Briefcase, ArrowLeft, Search } from 'lucide-react';
 import Link from 'next/link';
 
 export default function VacantesPage() {
-  const { vacancies, addCandidateApplication } = useData();
+  const { vacancies, activeCategoryNames, addCandidateApplication } = useData();
 
   const handleAddApplication = async (newApp: Omit<CandidateApplication, 'id' | 'appliedAt' | 'status'>) => {
     await addCandidateApplication(newApp);
@@ -50,7 +50,10 @@ export default function VacantesPage() {
           </div>
 
           {/* Vacancies List Component */}
-          <VacancyList vacancies={vacancies} onAddApplication={handleAddApplication} />
+          <VacancyList
+            vacancies={vacancies.filter((v) => v.isActive !== false)}
+            categories={activeCategoryNames}
+            onAddApplication={handleAddApplication} />
 
         </div>
       </main>

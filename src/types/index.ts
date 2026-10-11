@@ -1,7 +1,14 @@
 // Types for Soluciones Empresariales Staffing Platform
 
 export type WorkMode = 'Presencial' | 'Híbrido' | 'Remoto';
-export type JobCategory = 'Administración' | 'Finanzas y Contabilidad' | 'Operaciones y Logística' | 'Tecnología' | 'Ventas y Atención al Cliente' | 'Recursos Humanos';
+// Las categorías se administran desde el panel (tabla `categories`), por eso es un string libre.
+export type JobCategory = string;
+
+export interface Category {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
 export type RequestType = 'Plaza Nueva' | 'Reemplazo';
 
 export interface Vacancy {
@@ -18,6 +25,26 @@ export interface Vacancy {
   benefits: string[];
   postedAt: string;
   isUrgent?: boolean;
+  isActive?: boolean;
+  /** Empresa cliente dueña de la plaza. `company` es el nombre que se muestra al público. */
+  companyId?: string;
+  isConfidential?: boolean;
+}
+
+export const CONFIDENTIAL_COMPANY_NAME = 'Empresa Cliente Confidencial';
+
+export type ClientCompanyStatus = 'Pendiente' | 'Aprobada' | 'Inactiva';
+
+export interface ClientCompany {
+  id: string;
+  name: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  status: ClientCompanyStatus;
+  /** Código para entrar al portal de empresa. Se genera al aprobarla. */
+  accessCode?: string;
+  createdAt: string;
 }
 
 export type PipelineStage = 
@@ -28,6 +55,9 @@ export type PipelineStage =
   | 'Entrevista con Cliente'
   | 'Expediente Aprobado'
   | 'Contratación y Firma';
+
+export const AVAILABILITY_OPTIONS = ['Inmediata', '15 días', '1 mes', 'Más de 1 mes'] as const;
+export type Availability = (typeof AVAILABILITY_OPTIONS)[number];
 
 export interface CandidateApplication {
   id: string;
@@ -40,6 +70,8 @@ export interface CandidateApplication {
   location?: string;
   experienceYears: number;
   expectedSalary: number;
+  /** Disponibilidad para iniciar labores */
+  availability?: Availability;
   resumeUrl?: string;
   resumeFileName?: string;
   coverLetter?: string;
@@ -61,6 +93,17 @@ export type StaffingRequestStatus =
   | 'Completada'
   | 'Completado'
   | 'Cancelada';
+
+/** Statuses offered in the admin, in process order. ('Completado' is a legacy duplicate of 'Completada'.) */
+export const STAFFING_REQUEST_STATUSES: StaffingRequestStatus[] = [
+  'Pendiente (1-2 días)',
+  'En Evaluación de Salario',
+  'En Revisión',
+  'Búsqueda de Candidatos',
+  'Candidatos Presentados',
+  'Completada',
+  'Cancelada',
+];
 
 export interface StaffingRequest {
   id: string;

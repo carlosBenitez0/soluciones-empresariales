@@ -20,6 +20,24 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Variables de entorno
+
+Crear `.env.local` (no se versiona) con:
+
+| Variable | Dónde | Uso |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | cliente y servidor | URL del proyecto Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | cliente y servidor | Llave pública (anon). Sin ella la app usa `localStorage` (modo demo) |
+| `SUPABASE_SERVICE_ROLE_KEY` | solo servidor | Usada por las rutas `/api/*` para leer datos privados. Nunca con prefijo `NEXT_PUBLIC_` |
+| `RESEND_API_KEY` | solo servidor | Envío de correos con [Resend](https://resend.com). Sin ella los correos se omiten (se registra un aviso) |
+| `EMAIL_FROM` | solo servidor | Remitente, con dominio verificado en Resend. Ej. `Soluciones Empresariales <notificaciones@tudominio.com>` |
+| `NEXT_PUBLIC_SITE_URL` | cliente y servidor | URL pública para los enlaces de los correos (sin `/` final) |
+
+### Base de datos
+
+- Instalación nueva: ejecutar `supabase/schema.sql` (o `supabase/seed.sql` con datos de ejemplo) y luego `supabase/migration_v2.sql`.
+- Base existente: ejecutar solo `supabase/migration_v2.sql` (es idempotente).
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

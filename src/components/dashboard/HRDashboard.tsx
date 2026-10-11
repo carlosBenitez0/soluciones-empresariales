@@ -1,15 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CandidateApplication, StaffingRequest } from '../../types';
+import { PIPELINE_STEPS } from '../../lib/tracking';
 import { FileText, Users, DollarSign, UserX, ShieldCheck, CheckCircle2, Calculator, FileCheck } from 'lucide-react';
 
-interface HRDashboardProps {
-  applications: CandidateApplication[];
-  requests: StaffingRequest[];
-}
-
-export const HRDashboard: React.FC<HRDashboardProps> = ({ applications, requests }) => {
+export const HRDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'ingreso' | 'planilla' | 'salida' | 'prestaciones'>('ingreso');
 
   // Offboarding Calculator State
@@ -120,37 +115,17 @@ export const HRDashboard: React.FC<HRDashboardProps> = ({ applications, requests
                 Proceso ordenado: Solicitud de cliente -&gt; Evaluación de Salario -&gt; Reclutamiento -&gt; Contacto -&gt; Entrevista -&gt; Pruebas Técnicas y Psicométricas -&gt; Entrevista con Cliente -&gt; Firma de Contrato.
               </p>
 
-              {/* Active Pipeline List */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {applications.map((app) => (
-                  <div key={app.id} className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3 shadow-xs">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h4 className="font-extrabold text-slate-900">{app.fullName}</h4>
-                        <p className="text-xs text-blue-700 font-bold">{app.vacancyTitle}</p>
-                      </div>
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                        {app.status}
-                      </span>
-                    </div>
-
-                    <div className="text-xs text-slate-600 space-y-1 font-medium">
-                      <p>Email: {app.email} • Tel: {app.phone}</p>
-                      <p>Experiencia: {app.experienceYears} años • Salario Esperado: ${app.expectedSalary} USD</p>
-                    </div>
-
-                    {app.testScores && (
-                      <div className="p-3 rounded-lg bg-white border border-slate-200 text-xs space-y-1 shadow-xs">
-                        <div className="flex justify-between text-slate-800 font-bold">
-                          <span>Prueba Técnica: <strong className="text-emerald-700">{app.testScores.technicalScore}%</strong></span>
-                          <span>Prueba Psicométrica: <strong className="text-blue-700">{app.testScores.psychometricScore}%</strong></span>
-                        </div>
-                        <p className="text-slate-600 text-[11px] italic font-normal">{app.testScores.testNotes}</p>
-                      </div>
-                    )}
-                  </div>
+              {/* Pipeline stages (process description only: applicant data lives in the admin panel) */}
+              <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {PIPELINE_STEPS.map((step, idx) => (
+                  <li key={step} className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs font-extrabold flex items-center justify-center shrink-0">
+                      {idx + 1}
+                    </span>
+                    <span className="text-sm font-bold text-slate-800">{step}</span>
+                  </li>
                 ))}
-              </div>
+              </ol>
             </div>
           </div>
         )}
