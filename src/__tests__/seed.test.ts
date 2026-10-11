@@ -95,5 +95,6 @@ describe('demo seed', () => {
     const view = buildCompanyPortalView(demo!, seed.vacancies, seed.candidateApplications);
     expect(view.vacancies.length).toBeGreaterThanOrEqual(5);
     expect(view.vacancies.reduce((sum, v) => sum + v.totalApplicants, 0)).toBeGreaterThan(10);
+    expect(view.vacancies.some((v) => v.applicants.some((a) => a.hired))).toBe(true);
   });
 });

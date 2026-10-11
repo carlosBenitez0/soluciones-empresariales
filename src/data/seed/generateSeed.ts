@@ -154,7 +154,8 @@ const buildVacancies = (
     usedTitlesPerCompany.set(company.id, used);
 
     const isCompanyInactive = company.status === 'Inactiva';
-    const age = isCompanyInactive ? rng.int(60, 90) : rng.int(1, 90);
+    // The demo company's 4 vacancies cover old and new processes, so the portal shows every stage
+    const age = isCompanyInactive ? rng.int(60, 90) : company.id === demo.id ? [72, 48, 35, 9][idx] : rng.int(1, 90);
     const isConfidential = rng.chance(0.2);
     const location = rng.chance(0.7) ? company.city : rng.pick(MUNICIPALITIES);
     const workMode = rng.pickWeighted<WorkMode>(['Presencial', 'Híbrido', 'Remoto'], [60, 25, 15]);
@@ -267,6 +268,23 @@ const buildApplications = (
   return [...LEGACY_CANDIDATE_APPLICATIONS, ...generated];
 };
 
+/** Makes sure the demo company has a hired candidate, so the portal shows the revealed contact card. */
+const ensureDemoHire = (rng: Rng, vacancies: Vacancy[], applications: CandidateApplication[], demoId: string) => {
+  const demoVacancyIds = new Set(
+    vacancies.filter((v) => v.companyId === demoId && daysBetween(v.postedAt, REF) > 30).map((v) => v.id)
+  );
+  const candidates = applications.filter((a) => a.vacancyId && demoVacancyIds.has(a.vacancyId));
+  if (candidates.length === 0 || candidates.some((a) => a.status === 'Contratación y Firma')) return;
+
+  const oldest = [...candidates].sort((a, b) => a.appliedAt.localeCompare(b.appliedAt))[0];
+  oldest.status = 'Contratación y Firma';
+  oldest.testScores = oldest.testScores ?? {
+    technicalScore: rng.int(80, 96),
+    psychometricScore: rng.int(80, 95),
+    testNotes: rng.pick(TEST_NOTES),
+  };
+};
+
 const buildStaffingRequests = (rng: Rng, companies: ReturnType<typeof buildCompanies>, activeCategoryNames: Set<string>) => {
   const usedCodes = new Set(LEGACY_STAFFING_REQUESTS.map((r) => r.trackingCode));
   const statuses: StaffingRequestStatus[] = [
@@ -329,6 +347,7 @@ export const generateSeed = (seed = 2026): Collections => {
   const companiesWithMeta = buildCompanies(rng);
   const { vacancies, salaryById } = buildVacancies(rng, companiesWithMeta, activeCategoryNames);
   const candidateApplications = buildApplications(rng, vacancies, salaryById);
+  ensureDemoHire(rng, vacancies, candidateApplications, companiesWithMeta.find((c) => c.accessCode === DEMO_ACCESS_CODE)!.id);
   const staffingRequests = buildStaffingRequests(rng, companiesWithMeta, activeCategoryNames);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const clientCompanies: ClientCompany[] = companiesWithMeta.map(({ sector, city, domain, ...company }) => company);
