@@ -46,3 +46,35 @@ describe('VacancyList Component', () => {
     expect(screen.queryByRole('option', { name: 'Tecnología' })).toBeNull();
   });
 });
+
+describe('VacancyList progressive loading', () => {
+  const many = Array.from({ length: 40 }, (_, i) => ({
+    ...INITIAL_VACANCIES[0],
+    id: `vac-test-${i}`,
+    title: `Plaza de prueba ${i + 1}`,
+  }));
+  const titles = () => screen.queryAllByRole('heading', { level: 3, name: /^Plaza de prueba/ });
+
+  it('shows 27 vacancies first and loads the rest on demand', () => {
+    render(<VacancyList vacancies={many} onAddApplication={vi.fn()} />);
+
+    expect(titles()).toHaveLength(27);
+    expect(screen.getByText('Mostrando 27 de 40 vacantes')).toBeDefined();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cargar más vacantes' }));
+
+    expect(titles()).toHaveLength(40);
+    expect(screen.queryByRole('button', { name: 'Cargar más vacantes' })).toBeNull();
+  });
+
+  it('goes back to the first batch when the filters change', () => {
+    render(<VacancyList vacancies={many} onAddApplication={vi.fn()} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Cargar más vacantes' }));
+
+    fireEvent.change(screen.getByPlaceholderText('Buscar por puesto, requisito o ubicación...'), {
+      target: { value: 'Plaza de prueba' },
+    });
+
+    expect(titles()).toHaveLength(27);
+  });
+});
