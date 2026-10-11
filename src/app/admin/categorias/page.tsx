@@ -80,6 +80,42 @@ export default function AdminCategoriasPage() {
     }
   };
 
+  const statusToggle = (cat: Category) => (
+    <button
+      onClick={() => updateCategory(cat.id, { isActive: !cat.isActive })}
+      title={cat.isActive ? 'Desactivar categoría' : 'Activar categoría'}
+      className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors inline-flex items-center gap-1 whitespace-nowrap ${
+        cat.isActive
+          ? 'bg-emerald-100 text-emerald-900 border-emerald-300'
+          : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+      }`}
+    >
+      <Power className={`w-3 h-3 ${cat.isActive ? 'text-emerald-700' : 'text-slate-400'}`} />
+      <span>{cat.isActive ? 'Activa' : 'Inactiva'}</span>
+    </button>
+  );
+
+  const rowActions = (cat: Category) => (
+    <div className="flex items-center justify-end gap-2">
+      <button
+        onClick={() => openEditModal(cat)}
+        className="p-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+        title="Editar Categoría"
+        aria-label={`Editar ${cat.name}`}
+      >
+        <Edit2 className="w-3.5 h-3.5" />
+      </button>
+      <button
+        onClick={() => handleDelete(cat)}
+        className="p-2 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+        title="Eliminar Categoría"
+        aria-label={`Eliminar ${cat.name}`}
+      >
+        <Trash2 className="w-3.5 h-3.5" />
+      </button>
+    </div>
+  );
+
   return (
     <>
       <div className="space-y-6 pb-10">
@@ -115,69 +151,54 @@ export default function AdminCategoriasPage() {
           </div>
         </div>
 
-        {/* Categories Table */}
+        {/* Categories: table from sm, cards on phones */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-100 text-[11px] uppercase tracking-wider text-slate-600 border-b border-slate-200">
-                  <th className="py-3.5 px-4 font-bold">Categoría</th>
-                  <th className="py-3.5 px-4 font-bold">Vacantes</th>
-                  <th className="py-3.5 px-4 font-bold">Estado</th>
-                  <th className="py-3.5 px-4 font-bold text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
-                {filteredCategories.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="py-8 text-center text-slate-500 font-medium">
-                      No se encontraron categorías.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredCategories.map((cat) => (
-                    <tr
-                      key={cat.id}
-                      className={`hover:bg-slate-50/70 transition-colors ${cat.isActive ? '' : 'opacity-60'}`}
-                    >
-                      <td className="py-3.5 px-4 font-extrabold text-slate-900">{cat.name}</td>
-                      <td className="py-3.5 px-4 font-semibold text-slate-700">{vacancyCount(cat.name)}</td>
-                      <td className="py-3.5 px-4">
-                        <button
-                          onClick={() => updateCategory(cat.id, { isActive: !cat.isActive })}
-                          title={cat.isActive ? 'Desactivar categoría' : 'Activar categoría'}
-                          className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors flex items-center gap-1 ${
-                            cat.isActive
-                              ? 'bg-emerald-100 text-emerald-900 border-emerald-300'
-                              : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
-                          }`}
-                        >
-                          <Power className={`w-3 h-3 ${cat.isActive ? 'text-emerald-700' : 'text-slate-400'}`} />
-                          <span>{cat.isActive ? 'Activa' : 'Inactiva'}</span>
-                        </button>
-                      </td>
-                      <td className="py-3.5 px-4 text-right space-x-2">
-                        <button
-                          onClick={() => openEditModal(cat)}
-                          className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
-                          title="Editar Categoría"
-                        >
-                          <Edit2 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(cat)}
-                          className="p-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
-                          title="Eliminar Categoría"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </td>
+          {filteredCategories.length === 0 ? (
+            <p className="py-8 text-center text-xs text-slate-500 font-medium">No se encontraron categorías.</p>
+          ) : (
+            <>
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-[11px] uppercase tracking-wider text-slate-600 border-b border-slate-200">
+                      <th className="py-3.5 px-4 font-bold">Categoría</th>
+                      <th className="py-3.5 px-4 font-bold">Vacantes</th>
+                      <th className="py-3.5 px-4 font-bold">Estado</th>
+                      <th className="py-3.5 px-4 font-bold text-right">Acciones</th>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-xs">
+                    {filteredCategories.map((cat) => (
+                      <tr
+                        key={cat.id}
+                        className={`hover:bg-slate-50/70 transition-colors ${cat.isActive ? '' : 'opacity-60'}`}
+                      >
+                        <td className="py-3.5 px-4 font-extrabold text-slate-900">{cat.name}</td>
+                        <td className="py-3.5 px-4 font-semibold text-slate-700">{vacancyCount(cat.name)}</td>
+                        <td className="py-3.5 px-4">{statusToggle(cat)}</td>
+                        <td className="py-3.5 px-4">{rowActions(cat)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <ul className="sm:hidden divide-y divide-slate-100">
+                {filteredCategories.map((cat) => (
+                  <li key={cat.id} className={`p-4 flex items-center justify-between gap-3 ${cat.isActive ? '' : 'opacity-60'}`}>
+                    <div className="min-w-0 space-y-1.5">
+                      <h3 className="text-sm font-extrabold text-slate-900">{cat.name}</h3>
+                      <div className="flex items-center gap-2 text-[11px] text-slate-500">
+                        {statusToggle(cat)}
+                        <span className="whitespace-nowrap">{vacancyCount(cat.name)} vacantes</span>
+                      </div>
+                    </div>
+                    {rowActions(cat)}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       </div>
 

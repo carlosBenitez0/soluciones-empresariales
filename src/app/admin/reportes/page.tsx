@@ -96,7 +96,7 @@ export default function AdminReportsPage() {
       )}
 
       {/* Grid Selection */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         
         {/* Option 1: Executive */}
         <button
@@ -108,12 +108,12 @@ export default function AdminReportsPage() {
               : 'bg-white text-slate-800 border-slate-200 hover:border-blue-400 hover:bg-slate-50'
           }`}
         >
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between gap-2 mb-3">
             <div className={`p-2.5 rounded-xl ${selectedReport === 'executive' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             {selectedReport === 'executive' && (
-              <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase">Seleccionado</span>
+              <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase whitespace-nowrap">Seleccionado</span>
             )}
           </div>
           <h3 className="font-extrabold text-sm mb-1">Informe Ejecutivo Consolidado</h3>
@@ -132,12 +132,12 @@ export default function AdminReportsPage() {
               : 'bg-white text-slate-800 border-slate-200 hover:border-blue-400 hover:bg-slate-50'
           }`}
         >
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between gap-2 mb-3">
             <div className={`p-2.5 rounded-xl ${selectedReport === 'vacancies' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
               <Briefcase className="w-5 h-5" />
             </div>
             {selectedReport === 'vacancies' && (
-              <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase">Seleccionado</span>
+              <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase whitespace-nowrap">Seleccionado</span>
             )}
           </div>
           <h3 className="font-extrabold text-sm mb-1">Bolsa de Vacantes Activas</h3>
@@ -156,12 +156,12 @@ export default function AdminReportsPage() {
               : 'bg-white text-slate-800 border-slate-200 hover:border-blue-400 hover:bg-slate-50'
           }`}
         >
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between gap-2 mb-3">
             <div className={`p-2.5 rounded-xl ${selectedReport === 'requests' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
               <Building2 className="w-5 h-5" />
             </div>
             {selectedReport === 'requests' && (
-              <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase">Seleccionado</span>
+              <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase whitespace-nowrap">Seleccionado</span>
             )}
           </div>
           <h3 className="font-extrabold text-sm mb-1">Solicitudes B2B de Clientes</h3>
@@ -180,12 +180,12 @@ export default function AdminReportsPage() {
               : 'bg-white text-slate-800 border-slate-200 hover:border-blue-400 hover:bg-slate-50'
           }`}
         >
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between gap-2 mb-3">
             <div className={`p-2.5 rounded-xl ${selectedReport === 'candidates' ? 'bg-white/20 text-white' : 'bg-blue-50 text-blue-600'}`}>
               <Users className="w-5 h-5" />
             </div>
             {selectedReport === 'candidates' && (
-              <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase">Seleccionado</span>
+              <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase whitespace-nowrap">Seleccionado</span>
             )}
           </div>
           <h3 className="font-extrabold text-sm mb-1">Pipeline de Reclutamiento</h3>
@@ -213,7 +213,7 @@ export default function AdminReportsPage() {
             type="button"
             onClick={handleGeneratePDF}
             disabled={isGenerating}
-            className="px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-xs shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+            className="shrink-0 whitespace-nowrap px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-xs shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
           >
             {isGenerating ? (
               <>
@@ -268,13 +268,13 @@ export default function AdminReportsPage() {
           </div>
 
           <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-slate-50/50 max-h-72">
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full min-w-[640px] text-left border-collapse text-xs">
               <thead className="bg-slate-900 text-white font-bold sticky top-0">
                 <tr>
                   <th className="py-2.5 px-4">Identificador / Registro</th>
                   <th className="py-2.5 px-4">Entidad / Empresa / Candidato</th>
                   <th className="py-2.5 px-4">Detalle Principal</th>
-                  <th className="py-2.5 px-4 text-right">Estado / Condición</th>
+                  <th className="py-2.5 px-4 text-right whitespace-nowrap">Estado / Condición</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 text-slate-700">
@@ -284,7 +284,7 @@ export default function AdminReportsPage() {
                       <td className="py-2.5 px-4 font-bold text-blue-700">{v.title}</td>
                       <td className="py-2.5 px-4">{v.company}</td>
                       <td className="py-2.5 px-4 text-slate-500">{v.category} &bull; {v.salaryRange}</td>
-                      <td className="py-2.5 px-4 text-right">
+                      <td className="py-2.5 px-4 text-right whitespace-nowrap">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${v.isUrgent ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-700'}`}>
                           {v.isUrgent ? 'Urgente' : 'Activa'}
                         </span>
@@ -298,7 +298,7 @@ export default function AdminReportsPage() {
                       <td className="py-2.5 px-4 font-mono text-slate-900 font-bold">{r.trackingCode}</td>
                       <td className="py-2.5 px-4 font-bold">{r.companyName}</td>
                       <td className="py-2.5 px-4 text-slate-500">{r.positionTitle} ({r.numberOfPositions} plaz.)</td>
-                      <td className="py-2.5 px-4 text-right">
+                      <td className="py-2.5 px-4 text-right whitespace-nowrap">
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">
                           {r.status}
                         </span>
@@ -312,7 +312,7 @@ export default function AdminReportsPage() {
                       <td className="py-2.5 px-4 font-mono text-slate-900 font-bold">{c.trackingCode}</td>
                       <td className="py-2.5 px-4 font-bold">{c.fullName}</td>
                       <td className="py-2.5 px-4 text-slate-500">{c.vacancyTitle}</td>
-                      <td className="py-2.5 px-4 text-right">
+                      <td className="py-2.5 px-4 text-right whitespace-nowrap">
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">
                           {c.status}
                         </span>
@@ -326,14 +326,14 @@ export default function AdminReportsPage() {
                       <td className="py-2.5 px-4 font-bold text-blue-700">Métricas Globales</td>
                       <td className="py-2.5 px-4">Soluciones Empresariales SV</td>
                       <td className="py-2.5 px-4 text-slate-500">{vacancies.length} Vacantes | {staffingRequests.length} Solicitudes B2B</td>
-                      <td className="py-2.5 px-4 text-right font-bold text-emerald-600">88% Efectividad</td>
+                      <td className="py-2.5 px-4 text-right font-bold text-emerald-600 whitespace-nowrap">88% Efectividad</td>
                     </tr>
                     {vacancies.slice(0, 4).map((v) => (
                       <tr key={v.id} className="hover:bg-white">
                         <td className="py-2.5 px-4 font-bold text-slate-800">{v.title}</td>
                         <td className="py-2.5 px-4">{v.company}</td>
                         <td className="py-2.5 px-4 text-slate-500">{v.category}</td>
-                        <td className="py-2.5 px-4 text-right text-slate-600">{v.salaryRange}</td>
+                        <td className="py-2.5 px-4 text-right text-slate-600 whitespace-nowrap">{v.salaryRange}</td>
                       </tr>
                     ))}
                   </>

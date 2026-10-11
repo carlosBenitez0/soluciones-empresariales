@@ -143,12 +143,12 @@ export default function AdminSolicitudesPage() {
                     </div>
 
                     {/* Status Changer */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-500">Estado SLA:</span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs font-bold text-slate-500 whitespace-nowrap shrink-0">Estado SLA:</span>
                       <select
                         value={req.status}
                         onChange={(e) => handleStatusChange(req.id, e.target.value)}
-                        className="py-1.5 px-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-xs font-extrabold focus:outline-none cursor-pointer"
+                        className="min-w-0 max-w-full py-1.5 px-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-xs font-extrabold focus:outline-none cursor-pointer"
                       >
                         {STAFFING_REQUEST_STATUSES.map((st) => (
                           <option key={st} value={st}>{st}</option>
@@ -182,12 +182,12 @@ export default function AdminSolicitudesPage() {
                   </div>
 
                   {/* Convert to Public Vacancy Action */}
-                  <div className="pt-2 flex items-center justify-between">
-                    <span className="text-[11px] text-slate-400">Ingresado el: {req.submittedAt}</span>
+                  <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <span className="text-[11px] text-slate-400 whitespace-nowrap">Ingresado el: {req.submittedAt}</span>
 
                     <button
                       onClick={() => handleConvertToVacancy(req)}
-                      className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs shadow-xs transition-colors flex items-center gap-1.5"
+                      className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs shadow-xs transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Plus className="w-4 h-4" />
                       <span>Convertir en Vacante Pública (Bolsa de Empleo)</span>

@@ -150,12 +150,12 @@ export default function AdminCandidatosPage() {
                     </div>
 
                     {/* Pipeline Stage Selector */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-500">Avanzar Etapa:</span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs font-bold text-slate-500 whitespace-nowrap shrink-0">Avanzar Etapa:</span>
                       <select
                         value={app.status}
                         onChange={(e) => handleStepChange(app.id, e.target.value)}
-                        className="py-1.5 px-3 rounded-xl bg-purple-50 border border-purple-200 text-purple-950 text-xs font-extrabold focus:outline-none cursor-pointer"
+                        className="min-w-0 max-w-full py-1.5 px-3 rounded-xl bg-purple-50 border border-purple-200 text-purple-950 text-xs font-extrabold focus:outline-none cursor-pointer"
                       >
                         {pipelineSteps.map((st) => (
                           <option key={st} value={st}>{st}</option>

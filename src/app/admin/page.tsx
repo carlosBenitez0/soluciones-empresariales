@@ -95,18 +95,18 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
         
         {/* KPI 1: Vacantes */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3 relative overflow-hidden">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Bolsa de Empleo</span>
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
               <Briefcase className="w-5 h-5" />
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <span className="text-3xl font-black text-slate-900">{vacancies.length}</span>
               <span className="text-xs font-semibold text-emerald-600 flex items-center gap-0.5">
                 <TrendingUp className="w-3 h-3" /> +15%
@@ -127,17 +127,17 @@ export default function AdminDashboardPage() {
 
         {/* KPI 2: Solicitudes B2B */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3 relative overflow-hidden">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Solicitudes B2B</span>
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
               <Building2 className="w-5 h-5" />
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <span className="text-3xl font-black text-slate-900">{staffingRequests.length}</span>
               {pendingRequests.length > 0 && (
-                <span className="text-xs font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                <span className="text-xs font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 whitespace-nowrap">
                   {pendingRequests.length} Pendientes
                 </span>
               )}
@@ -157,14 +157,14 @@ export default function AdminDashboardPage() {
 
         {/* KPI 3: Postulantes */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3 relative overflow-hidden">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Candidatos Activos</span>
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0">
               <Users className="w-5 h-5" />
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <span className="text-3xl font-black text-slate-900">{candidateApplications.length}</span>
               <span className="text-xs font-semibold text-indigo-600">7 Etapas</span>
             </div>
@@ -183,14 +183,14 @@ export default function AdminDashboardPage() {
 
         {/* KPI 4: Tiempos */}
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3 relative overflow-hidden">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Promedio Contratación</span>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
               <Clock className="w-5 h-5" />
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <span className="text-3xl font-black text-slate-900">14 Días</span>
             </div>
             <p className="text-xs text-slate-500 font-medium mt-1">
@@ -206,7 +206,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Analytics & Category Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         
         {/* Category Breakdown (2 Cols) */}
         <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 space-y-5 shadow-xs">
@@ -311,7 +311,7 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="overflow-x-auto rounded-2xl border border-slate-200">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full min-w-[720px] text-left border-collapse text-xs">
             <thead className="bg-slate-900 text-white font-bold">
               <tr>
                 <th className="py-3 px-4">Código</th>
@@ -326,23 +326,23 @@ export default function AdminDashboardPage() {
             <tbody className="divide-y divide-slate-200 text-slate-700">
               {candidateApplications.slice(0, 5).map((app) => (
                 <tr key={app.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="py-3 px-4 font-mono font-bold text-slate-900">{app.trackingCode}</td>
+                  <td className="py-3 px-4 font-mono font-bold text-slate-900 whitespace-nowrap">{app.trackingCode}</td>
                   <td className="py-3 px-4">
                     <p className="font-extrabold text-slate-900">{app.fullName}</p>
                     <p className="text-[11px] text-slate-400">{app.email}</p>
                   </td>
                   <td className="py-3 px-4 font-semibold text-blue-700">{app.vacancyTitle}</td>
-                  <td className="py-3 px-4 font-medium">{app.experienceYears} años</td>
-                  <td className="py-3 px-4 font-mono font-bold text-emerald-700">${app.expectedSalary}</td>
+                  <td className="py-3 px-4 font-medium whitespace-nowrap">{app.experienceYears} años</td>
+                  <td className="py-3 px-4 font-mono font-bold text-emerald-700 whitespace-nowrap">${app.expectedSalary}</td>
                   <td className="py-3 px-4">
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 inline-block">
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 inline-block whitespace-nowrap">
                       {app.status}
                     </span>
                   </td>
                   <td className="py-3 px-4 text-right">
                     <Link
                       href="/admin/candidatos"
-                      className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-blue-600 text-white font-bold text-[11px] transition-colors inline-block"
+                      className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-blue-600 text-white font-bold text-[11px] transition-colors inline-block whitespace-nowrap"
                     >
                       Evaluar
                     </Link>
